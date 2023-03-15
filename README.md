@@ -10,14 +10,6 @@
 git clone https://github.com/ngafifhsym/flutter-chatsapp.git
 ```
 
-<ul>
-  <li>Setelah berhasil di clone, jangan lupa untuk menginstall node_modules</li>
-</ul>
-
-```bash
-npm install
-```
-
 ## LANGKAH 2
 ### CARA MENGERJAKAN TASK
 
