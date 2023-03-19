@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:chatapp/main.dart';
 import 'package:chatapp/ui/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = '/splash-screen';
+
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
@@ -48,18 +48,18 @@ class _SplashScreenState extends State<SplashScreen> {
                   fontFamily: GoogleFonts.poppins().toString(),
                   fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16,),
             const SizedBox(
-              width: 20,
-                height: 20,
-                child: CircularProgressIndicator()
-            )
+              height: 16,
+            ),
+            const SizedBox(
+                width: 20, height: 20, child: CircularProgressIndicator())
           ],
         ),
       ),
     );
   }
 
+  // ** this function use to set timer of splashscreen to navigate
   Future<Timer> _loadWidget() async {
     var duration = Duration(seconds: timer);
     return Timer(duration, () {
