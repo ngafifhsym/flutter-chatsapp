@@ -1,3 +1,4 @@
+import 'package:chatapp/common/theme_data_manager.dart';
 import 'package:chatapp/ui/home/home_page.dart';
 import 'package:chatapp/ui/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        backgroundColor: const Color(0xFF111E27),
-        visualDensity: VisualDensity.adaptivePlatformDensity
-      ),
+      theme: getThemeData(),
       initialRoute: SplashScreen.routeName,
       routes: {
         SplashScreen.routeName : (context) => const SplashScreen(),
