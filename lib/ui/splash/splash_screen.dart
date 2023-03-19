@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/ui/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,12 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             Text(
               'WalChat',
-              style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontFamily: GoogleFonts.poppins().toString(),
-                  fontWeight: FontWeight.bold),
-            ),
+              style: getWhite24BoldTextStyle()),
             const SizedBox(
               height: 16,
             ),
