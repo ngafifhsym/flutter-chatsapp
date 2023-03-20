@@ -23,13 +23,13 @@ class CustomTextField extends StatelessWidget {
       children: [
         Text(
           labelName,
-          style: getWhite12RegularTextStyle(),
+          style: getWhite14RegularTextStyle(),
         ),
         const SizedBox(height: 8.0,),
         TextField(
           controller: controller,
           obscureText: obSecure,
-          style: getWhite12RegularTextStyle(),
+          style: getWhite14RegularTextStyle(),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             filled: true,
@@ -38,7 +38,7 @@ class CustomTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(10)
             ),
             hintText: textHint,
-            hintStyle: getWhite12RegularTextStyle()
+            hintStyle: getWhite14RegularTextStyle()
           ),
         )
       ],
