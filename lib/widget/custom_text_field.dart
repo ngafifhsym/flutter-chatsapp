@@ -31,7 +31,7 @@ class CustomTextField extends StatelessWidget {
           obscureText: obSecure,
           style: getWhite12RegularTextStyle(),
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             filled: true,
             fillColor: ColorManager.secondaryColor,
             border: OutlineInputBorder(
