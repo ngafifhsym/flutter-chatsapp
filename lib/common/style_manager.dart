@@ -15,3 +15,10 @@ TextStyle getWhite24BoldTextStyle({
 }){
   return _setTextStyle(fontSize, fontWeight, Colors.white);
 }
+
+TextStyle getWhite12RegularTextStyle({
+  double fontSize = 12,
+  FontWeight fontWeight = FontWeightManager.regular
+}){
+  return _setTextStyle(fontSize, fontWeight, Colors.white);
+}
