@@ -1,75 +1,32 @@
+import 'package:chatapp/common/theme_data_manager.dart';
+import 'package:chatapp/ui/auth/register/register_page.dart';
+import 'package:chatapp/ui/auth/register/update_photo_page.dart';
+import 'package:chatapp/ui/auth/welcome_page.dart';
+import 'package:chatapp/ui/home/home_page.dart';
+import 'package:chatapp/ui/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:faker/faker.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
-  var faker = new Faker();
-  List<Tab> myTab = [
-    Tab(
-      text: "Chats",
-    ),
-    Tab(
-      text: "Whats New",
-    )
-  ];
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: myTab.length,
-        child: Scaffold(
-          backgroundColor: Color(0xFF111E27),
-          appBar: AppBar(
-            title: Text("Walchat"),
-            backgroundColor: Color(0xFF202D36),
-            bottom: TabBar(
-              tabs: myTab,
-              indicatorColor: Color(0xFF6D493A),
-            ),
-          ),
-          body: TabBarView(children: [
-             ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-           return ChatItem(
-              imageUrl: "https://picsum.photos/id/$index/200/300",
-              title: faker.person.name(),
-              subtitle: faker.lorem.sentence(),
-              );
-          },
-        ),
-            Center(
-              child: Text("Text 2"),
-            ),
-        //  
-          ])
-        ),
-      ),
+      title: 'Flutter Demo',
+      theme: getThemeData(),
+      initialRoute: SplashScreen.routeName,
+      routes: {
+        SplashScreen.routeName : (context) => const SplashScreen(),
+        HomePage.routeName : (context) => const HomePage(),
+        RegisterPage.routeName : (context) => const RegisterPage(),
+        UpdatePhotoPage.routeName : (context) => const UpdatePhotoPage(),
+        WelcomePage.routeName : (context) => const WelcomePage(),
+      },
     );
   }
 }
-class ChatItem extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String subtitle;
-
-  const ChatItem({
-    super.key,
-    required this.imageUrl, required this.title, required this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      textColor: Colors.white,
-      title: Text(title),
-      subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-      leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl),),
-      trailing: Text("10.00 PM"),
-      
-    );
-    }
-    }
