@@ -1,5 +1,6 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
+import 'package:chatapp/ui/auth/register/update_photo_page.dart';
 import 'package:chatapp/widget/custom_button.dart';
 import 'package:chatapp/widget/custom_text_field.dart';
 import 'package:flutter/gestures.dart';
@@ -49,7 +50,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16,),
                 CustomTextField(labelName: "Password", textHint: "Masukkan Password Kamu", controller: passwordController, obSecure: true,),
                 const SizedBox(height: 50,),
-                CustomButton(textButton: "Daftar", onTap: (){}),
+                CustomButton(textButton: "Daftar", onTap: (){
+                  Navigator.pushNamed(context, UpdatePhotoPage.routeName);
+                }),
                 const SizedBox(height: 16,),
                 RichText(text: TextSpan(
                   children: [

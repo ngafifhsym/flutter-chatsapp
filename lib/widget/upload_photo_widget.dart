@@ -34,12 +34,15 @@ class UploadPhotoWidget extends StatelessWidget {
           child: SizedBox(
             width: 50,
             height: 50,
-            child: RawMaterialButton(
-              fillColor: ColorManager.secondaryColor,
-              elevation: 2.0,
-              padding: const EdgeInsets.all(16),
-              onPressed: () {},
-              child: const Icon(Icons.add),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: RawMaterialButton(
+                fillColor: ColorManager.secondaryColor,
+                elevation: 2.0,
+                padding: const EdgeInsets.all(8),
+                onPressed: () {},
+                child: const Icon(Icons.add, color: Colors.white,),
+              ),
             ),
           ),
         )
