@@ -15,3 +15,24 @@ TextStyle getWhite24BoldTextStyle({
 }){
   return _setTextStyle(fontSize, fontWeight, Colors.white);
 }
+
+TextStyle getWhite12RegularTextStyle({
+  double fontSize = 12,
+  FontWeight fontWeight = FontWeightManager.regular
+}){
+  return _setTextStyle(fontSize, fontWeight, Colors.white);
+}
+
+TextStyle getWhite14RegularTextStyle({
+  double fontSize = 14,
+  FontWeight fontWeight = FontWeightManager.regular
+}){
+  return _setTextStyle(fontSize, fontWeight, Colors.white);
+}
+
+TextStyle getWhite16SemiBoldTextStyle({
+  double fontSize = 16,
+  FontWeight fontWeight = FontWeightManager.semiBold
+}){
+  return _setTextStyle(fontSize, fontWeight, Colors.white);
+}
