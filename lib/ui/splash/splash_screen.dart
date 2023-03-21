@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/ui/auth/register/register_page.dart';
+import 'package:chatapp/ui/auth/welcome_page.dart';
 import 'package:chatapp/ui/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -60,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<Timer> _loadWidget() async {
     var duration = Duration(seconds: timer);
     return Timer(duration, () {
-      Navigator.pushReplacementNamed(context, RegisterPage.routeName);
+      Navigator.pushReplacementNamed(context, WelcomePage.routeName);
     });
   }
 }

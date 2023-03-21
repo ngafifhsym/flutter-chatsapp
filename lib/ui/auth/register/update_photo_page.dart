@@ -5,7 +5,7 @@ import 'package:chatapp/widget/upload_photo_widget.dart';
 import 'package:flutter/material.dart';
 
 class UpdatePhotoPage extends StatelessWidget {
-  static const String routeName = 'update-photo';
+  static const String routeName = '/update-photo';
   const UpdatePhotoPage({Key? key}) : super(key: key);
 
   @override
