@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/font_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +29,13 @@ TextStyle getWhite14RegularTextStyle({
   FontWeight fontWeight = FontWeightManager.regular
 }){
   return _setTextStyle(fontSize, fontWeight, Colors.white);
+}
+
+TextStyle getPrimary14RegularTextStyle({
+  double fontSize = 14,
+  FontWeight fontWeight = FontWeightManager.regular
+}){
+  return _setTextStyle(fontSize, fontWeight, ColorManager.primaryColor);
 }
 
 TextStyle getWhite16SemiBoldTextStyle({
