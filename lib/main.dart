@@ -1,5 +1,5 @@
 
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 void main(){
@@ -81,8 +81,28 @@ class Login extends StatelessWidget {
               
                     ),
             ),
-        
+          Container(
+            width: 200,
+            height: 45,
+            margin: EdgeInsets.symmetric(vertical: 60),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              backgroundColor: Color(0xFF6D493A)
+              ),
+              onPressed: () {},
+             child: Text("Masuk",
+             style: TextStyle(
+              color: Color.fromARGB(255, 255, 255, 255)
+             ),)),
+          ),
+          Text("Belum Punya Akun ?", style: GoogleFonts.poppins(fontSize: 16,color: Colors.white)),
+          TextButton(onPressed: (){},
+           child: Text("Register",style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),))
           ],
+        
         )
         
        
