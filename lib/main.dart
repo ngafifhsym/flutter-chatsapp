@@ -1,114 +1,34 @@
-
-import 'package:google_fonts/google_fonts.dart';
+import 'package:chatapp/common/theme_data_manager.dart';
+import 'package:chatapp/ui/auth/login/login_screen.dart';
+import 'package:chatapp/ui/auth/register/register_page.dart';
+import 'package:chatapp/ui/auth/register/update_photo_page.dart';
+import 'package:chatapp/ui/auth/welcome_page.dart';
+import 'package:chatapp/ui/home/home_page.dart';
+import 'package:chatapp/ui/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
-void main(){
-  runApp(Login());
+void main() {
+  runApp(const MyApp());
 }
 
-class Login extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color(0xFF111E27),
-        body:
-        Column(
-          children: [
-            Image(image: AssetImage("images/walet.png")),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 41),
-              child: TextField(
-              enableInteractiveSelection: true,
-              autofocus: true,
-              showCursor: true,
-              cursorColor: Color(0xFF6D493A),
-              decoration: new InputDecoration(
-                border: OutlineInputBorder(),
-                focusedBorder:OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFF6D493A)
-                  )
-                ),
-                enabledBorder:OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 253, 253, 253)
-                  )
-                ),
-              hintText: "Masukan Email Anda",
-              hintStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              labelText: "Email",
-              labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              prefixIcon: Icon(Icons.person),
-              prefixIconColor: Color.fromARGB(255, 255, 255, 255)
-              ),
-              style: TextStyle(
-                color: Color(0xFF6D493A)
-              ),
-                    ),
-            ),
-            Padding(
-              padding:EdgeInsets.symmetric(vertical: 10, horizontal: 41),
-              child: TextField(
-              obscureText: true,
-              
-              decoration: new InputDecoration(
-                focusedBorder:OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFF6D493A)
-                  )
-                ),
-                enabledBorder:OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 253, 253, 253)
-                  )
-                ),
-                border: OutlineInputBorder(),
-              hintText: "Masukan Password Anda",
-              hintStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              labelText: "Password",
-              labelStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              prefixIcon: Icon(Icons.key),
-              prefixIconColor: Color.fromARGB(255, 255, 255, 255)),
-              
-              
-              style: TextStyle(
-                color: Color(0xFF6D493A)
-              ),
-
-            
-              
-                    ),
-            ),
-          Container(
-            width: 200,
-            height: 45,
-            margin: EdgeInsets.symmetric(vertical: 60),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)
-                ),
-              backgroundColor: Color(0xFF6D493A)
-              ),
-              onPressed: () {},
-             child: Text("Masuk",
-             style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255)
-             ),)),
-          ),
-          Text("Belum Punya Akun ?", style: GoogleFonts.poppins(fontSize: 16,color: Colors.white)),
-          TextButton(onPressed: (){},
-           child: Text("Register",style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),))
-          ],
-        
-        )
-        
-       
-        
-        
-      ),
+      title: 'Flutter Demo',
+      theme: getThemeData(),
+      initialRoute: SplashScreen.routeName,
+      routes: {
+        SplashScreen.routeName : (context) => const SplashScreen(),
+        HomePage.routeName : (context) => const HomePage(),
+        RegisterPage.routeName : (context) => const RegisterPage(),
+        UpdatePhotoPage.routeName : (context) => const UpdatePhotoPage(),
+        WelcomePage.routeName : (context) => const WelcomePage(),
+        LoginPage.routeName : (context) => const LoginPage()
+      },
     );
   }
 }
