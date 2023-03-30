@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Myapp());
+  runApp(ProfileApp());
 }
 
-class Myapp extends StatelessWidget {
+class ProfileApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        backgroundColor: Color(0xFF111E27),
+        body: Center(
+          child: CircleAvatar(),
+        ),
+      ),
+    );
   }
 }
