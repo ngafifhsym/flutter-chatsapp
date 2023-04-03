@@ -1,6 +1,7 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/model/message.dart';
+import 'package:chatapp/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 
 class MessageItem extends StatelessWidget {
@@ -17,7 +18,7 @@ class MessageItem extends StatelessWidget {
             message.sender == 'joko' ? Alignment.topRight : Alignment.topLeft,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          margin: message.sender == 'joko' ? EdgeInsets.only(left: 60) : EdgeInsets.only(right: 60),
+          margin: message.sender == 'joko' ? const EdgeInsets.only(left: 60) : const EdgeInsets.only(right: 60),
           decoration: BoxDecoration(
               borderRadius: message.sender == 'joko'
                   ? const BorderRadius.only(
@@ -44,7 +45,7 @@ class MessageItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                message.dateTime,
+                dateFormatter(message.dateTime),
                 textAlign: message.sender == 'joko'? TextAlign.start : TextAlign.end,
                 style: message.sender == 'joko' ? getPrimary14RegularTextStyle() : getWhite14RegularTextStyle(),
               ),
