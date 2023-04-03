@@ -1,4 +1,5 @@
 import 'package:chatapp/common/color_manager.dart';
+import 'package:chatapp/ui/message/message_page.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 
@@ -20,9 +21,8 @@ class HomePage extends StatelessWidget {
         text: "Whats New",
       )
     ];
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
+    return Scaffold(
+      body: DefaultTabController(
         length: myTab.length,
         child: Scaffold(
             backgroundColor: ColorManager.primaryColor,
@@ -42,6 +42,9 @@ class HomePage extends StatelessWidget {
                     imageUrl: "https://picsum.photos/id/$index/200/300",
                     title: faker.person.name(),
                     subtitle: faker.lorem.sentence(),
+                    onTap : (){
+                      Navigator.pushNamed(context, MessagePage.routeName);
+                    }
                   );
                 },
               ),
