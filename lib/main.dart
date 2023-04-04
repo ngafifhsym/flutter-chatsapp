@@ -4,6 +4,7 @@ import 'package:chatapp/ui/auth/register/register_page.dart';
 import 'package:chatapp/ui/auth/register/update_photo_page.dart';
 import 'package:chatapp/ui/auth/welcome_page.dart';
 import 'package:chatapp/ui/home/home_page.dart';
+import 'package:chatapp/ui/message/message_page.dart';
 import 'package:chatapp/ui/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,9 @@ class MyApp extends StatelessWidget {
         RegisterPage.routeName : (context) => const RegisterPage(),
         UpdatePhotoPage.routeName : (context) => const UpdatePhotoPage(),
         WelcomePage.routeName : (context) => const WelcomePage(),
+        MessagePage.routeName : (context) => const MessagePage(),
         LoginPage.routeName : (context) => const LoginPage()
+
       },
     );
   }
