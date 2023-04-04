@@ -28,9 +28,7 @@ class MyApp extends StatelessWidget {
         RegisterPage.routeName : (context) => const RegisterPage(),
         UpdatePhotoPage.routeName : (context) => const UpdatePhotoPage(),
         WelcomePage.routeName : (context) => const WelcomePage(),
-
         MessagePage.routeName : (context) => const MessagePage(),
-
         LoginPage.routeName : (context) => const LoginPage()
 
       },
