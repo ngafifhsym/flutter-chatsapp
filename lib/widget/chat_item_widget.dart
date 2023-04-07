@@ -1,4 +1,5 @@
 import 'package:chatapp/ui/message/message_page.dart';
+import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:flutter/material.dart';
 
 class ChatItem extends StatelessWidget {
@@ -24,17 +25,7 @@ class ChatItem extends StatelessWidget {
         subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
         leading: Hero(
           tag: title,
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(imageUrl),
-            child: FadeInImage(
-              placeholder: const AssetImage('assets/images/empty_image.png'),
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-              imageErrorBuilder:(BuildContext context, Object exception, StackTrace? stackTrace) {
-                return Image.asset('assets/images/empty_image.png');
-              },
-            ),
-          ),
+          child: CircleImageWidget(networkImage: imageUrl,)
         ),
       ),
     );

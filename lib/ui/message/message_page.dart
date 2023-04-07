@@ -1,6 +1,7 @@
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/model/message.dart';
 import 'package:chatapp/widget/chat_text_field.dart';
+import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/message_item_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -38,19 +39,10 @@ class _MessagePageState extends State<MessagePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Hero(
-              tag: userData.username,
-              child: CircleAvatar(
-                radius: 20,
-                child: FadeInImage(
-                  placeholder: const AssetImage('assets/images/empty_image.png'),
-                  image: NetworkImage(userData.photoUrl),
-                  fit: BoxFit.cover,
-                  imageErrorBuilder:(BuildContext context, Object exception, StackTrace? stackTrace) {
-                    return Image.asset('assets/images/empty_image.png');
-                  },
-                ),
-              ),
-            ),
+                tag: userData.username,
+                child: CircleImageWidget(
+                  networkImage: userData.photoUrl,
+                )),
             const SizedBox(
               width: 8,
             ),
