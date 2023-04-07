@@ -22,15 +22,18 @@ class ChatItem extends StatelessWidget {
         textColor: Colors.white,
         title: Text(title),
         subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(imageUrl),
-          child: FadeInImage(
-            placeholder: const AssetImage('assets/images/empty_image.png'),
-            image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
-            imageErrorBuilder:(BuildContext context, Object exception, StackTrace? stackTrace) {
-              return Image.asset('assets/images/empty_image.png');
-            },
+        leading: Hero(
+          tag: title,
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(imageUrl),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/images/empty_image.png'),
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover,
+              imageErrorBuilder:(BuildContext context, Object exception, StackTrace? stackTrace) {
+                return Image.asset('assets/images/empty_image.png');
+              },
+            ),
           ),
         ),
       ),
