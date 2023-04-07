@@ -7,13 +7,12 @@ class ChatItem extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
-  const ChatItem({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
-    required this.onTap
-  });
+  const ChatItem(
+      {super.key,
+      required this.imageUrl,
+      required this.title,
+      required this.subtitle,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +24,14 @@ class ChatItem extends StatelessWidget {
         subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
         leading: CircleAvatar(
           backgroundImage: NetworkImage(imageUrl),
+          child: FadeInImage(
+            placeholder: const AssetImage('assets/images/empty_image.png'),
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
+            imageErrorBuilder:(BuildContext context, Object exception, StackTrace? stackTrace) {
+              return Image.asset('assets/images/empty_image.png');
+            },
+          ),
         ),
       ),
     );

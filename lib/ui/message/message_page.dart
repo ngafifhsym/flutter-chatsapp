@@ -37,13 +37,16 @@ class _MessagePageState extends State<MessagePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(userData.photoUrl))),
+            CircleAvatar(
+              radius: 20,
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/images/empty_image.png'),
+                image: NetworkImage(userData.photoUrl),
+                fit: BoxFit.cover,
+                imageErrorBuilder:(BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Image.asset('assets/images/empty_image.png');
+                },
+              ),
             ),
             const SizedBox(
               width: 8,
