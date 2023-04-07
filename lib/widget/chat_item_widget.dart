@@ -26,7 +26,6 @@ class ChatItem extends StatelessWidget {
         leading: CircleAvatar(
           backgroundImage: NetworkImage(imageUrl),
         ),
-        trailing: const Text("10.00 PM"),
       ),
     );
   }

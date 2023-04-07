@@ -1,4 +1,5 @@
 import 'package:chatapp/common/color_manager.dart';
+import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
 import 'package:chatapp/widget/chat_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Walchat'),
+        automaticallyImplyLeading: false,
+        title: const Text('Walchat'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -43,7 +45,15 @@ class _HomePageState extends State<HomePage> {
               if (state is UserSuccess) {
                 return listChat(state.users);
               }
-              return const CircularProgressIndicator();
+              if (state is UserFailed) {
+                return Center(
+                  child: Text(
+                    'Something went wrong!',
+                    style: getWhite14RegularTextStyle(),
+                  ),
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
             },
           ),
         ),
@@ -62,7 +72,9 @@ class _HomePageState extends State<HomePage> {
               imageUrl: user.photoUrl,
               title: user.username,
               subtitle: user.about,
-              onTap: () {});
+              onTap: () {
+
+              });
         });
   }
 }
