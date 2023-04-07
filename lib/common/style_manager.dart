@@ -24,6 +24,13 @@ TextStyle getWhite12RegularTextStyle({
   return _setTextStyle(fontSize, fontWeight, Colors.white);
 }
 
+TextStyle getWhite10RegularTextStyle({
+  double fontSize = 10,
+  FontWeight fontWeight = FontWeightManager.regular
+}){
+  return _setTextStyle(fontSize, fontWeight, Colors.white);
+}
+
 TextStyle getWhite14RegularTextStyle({
   double fontSize = 14,
   FontWeight fontWeight = FontWeightManager.regular
@@ -33,6 +40,12 @@ TextStyle getWhite14RegularTextStyle({
 
 TextStyle getPrimary14RegularTextStyle({
   double fontSize = 14,
+  FontWeight fontWeight = FontWeightManager.regular
+}){
+  return _setTextStyle(fontSize, fontWeight, ColorManager.primaryColor);
+}
+TextStyle getPrimary10RegularTextStyle({
+  double fontSize = 10,
   FontWeight fontWeight = FontWeightManager.regular
 }){
   return _setTextStyle(fontSize, fontWeight, ColorManager.primaryColor);
