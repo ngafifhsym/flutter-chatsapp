@@ -34,23 +34,12 @@ class _MessagePageState extends State<MessagePage> {
             size: 20,
           ),
         ),
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Hero(
-                tag: userData.username,
-                child: CircleImageWidget(
-                  networkImage: userData.photoUrl,
-                )),
-            const SizedBox(
-              width: 8,
-            ),
-            Text(
-              userData.username,
-              style: getWhite14RegularTextStyle(),
-            )
-          ],
+        title: ListTile(
+          leading: Hero(
+            tag: userData.username,
+            child: CircleImageWidget(networkImage: userData.photoUrl,),
+          ),
+          title: Text(userData.username, style: getWhite16SemiBoldTextStyle(),),
         ),
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.menu))],
       ),
