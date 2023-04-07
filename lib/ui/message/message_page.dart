@@ -1,9 +1,10 @@
-import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/model/message.dart';
 import 'package:chatapp/widget/chat_text_field.dart';
 import 'package:chatapp/widget/message_item_widget.dart';
 import 'package:flutter/material.dart';
+
+import '../../data/model/chat_user.dart';
 
 class MessagePage extends StatefulWidget {
   static const String routeName = '/message-page';
@@ -19,28 +20,36 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userData = ModalRoute.of(context)?.settings.arguments as ChatUser;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+          ),
         ),
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset(
-              'assets/images/empty_image.png',
-              width: 35,
-              height: 35,
+            Container(
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(userData.photoUrl))),
             ),
             const SizedBox(
               width: 8,
             ),
             Text(
-              'Username',
+              userData.username,
               style: getWhite14RegularTextStyle(),
             )
           ],
@@ -49,9 +58,10 @@ class _MessagePageState extends State<MessagePage> {
       ),
       body: Column(
         children: [
-          Expanded(child: ListView.builder(
+          Expanded(
+              child: ListView.builder(
             itemCount: dummyMessage.length,
-            itemBuilder: (context, index){
+            itemBuilder: (context, index) {
               return MessageItem(message: dummyMessage[index]);
             },
           )),

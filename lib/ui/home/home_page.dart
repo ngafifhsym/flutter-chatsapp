@@ -1,6 +1,7 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
+import 'package:chatapp/ui/message/message_page.dart';
 import 'package:chatapp/widget/chat_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,8 +74,9 @@ class _HomePageState extends State<HomePage> {
               title: user.username,
               subtitle: user.about,
               onTap: () {
-
-              });
+                Navigator.pushNamed(context, MessagePage.routeName, arguments: user);
+              }
+              );
         });
   }
 }
