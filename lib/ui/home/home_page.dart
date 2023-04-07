@@ -74,7 +74,12 @@ class _HomePageState extends State<HomePage> {
               title: user.username,
               subtitle: user.about,
               onTap: () {
-                Navigator.pushNamed(context, MessagePage.routeName, arguments: user);
+                /**
+                 * the then method used  to trigger  a rebuild of...
+                 * ...the parent widget when the new page is popped...
+                 * ...of the stack
+                 */
+                Navigator.pushNamed(context, MessagePage.routeName, arguments: user).then((_) => setState((){}));
               }
               );
         });
