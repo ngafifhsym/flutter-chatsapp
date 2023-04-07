@@ -1,7 +1,9 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
+import 'package:chatapp/data/model/chat_user.dart';
 import 'package:chatapp/data/model/message.dart';
 import 'package:chatapp/widget/chat_text_field.dart';
+import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/current_message_item.dart';
 import 'package:chatapp/widget/guest_message_item.dart';
 import 'package:flutter/material.dart';
@@ -20,31 +22,23 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final dataUser = ModalRoute.of(context)?.settings.arguments as ChatUser;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, size: 20,),
         ),
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset(
-              'assets/images/empty_image.png',
-              width: 35,
-              height: 35,
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            Text(
-              'Username',
-              style: getWhite14RegularTextStyle(),
-            )
-          ],
+        title: ListTile(
+          leading: Hero(
+            tag: dataUser.username,
+            child: CircleImageWidget(networkImage: dataUser.photoUrl,),
+          ),
+          title: Text(dataUser.username, style: getWhite16SemiBoldTextStyle(),),
         ),
         actions: [
           IconButton(
