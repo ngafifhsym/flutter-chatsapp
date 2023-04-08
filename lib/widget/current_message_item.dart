@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CurrentMessageItem extends StatelessWidget {
   const CurrentMessageItem({Key? key, required this.message}) : super(key: key);
 
-  final Message message;
+  final ChatMessage message;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class CurrentMessageItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                dateFormatter(message.dateTime),
+                dateFormatter(message.timestamp),
                 textAlign: TextAlign.start,
                 style: getPrimary10RegularTextStyle(),
               ),
