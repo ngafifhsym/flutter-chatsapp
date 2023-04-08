@@ -1,4 +1,5 @@
 import 'package:chatapp/common/theme_data_manager.dart';
+import 'package:chatapp/data/cubit/message_cubit.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
 import 'package:chatapp/firebase_options.dart';
 import 'package:chatapp/ui/auth/login/login_screen.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => UserCubit()..fetchUsers(),
-        )
+        ),
+        BlocProvider(create: (context) => MessageCubit())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
           RegisterPage.routeName: (context) => const RegisterPage(),
           UpdatePhotoPage.routeName: (context) => const UpdatePhotoPage(),
           WelcomePage.routeName: (context) => const WelcomePage(),
-          MessagePage.routeName: (context) => const MessagePage(),
+          // MessagePage.routeName: (context) => const MessagePage(),
           LoginPage.routeName: (context) => const LoginPage()
         },
       ),

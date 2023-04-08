@@ -1,4 +1,5 @@
 import 'package:chatapp/common/color_manager.dart';
+import 'package:chatapp/common/slide_page_route.dart';
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
 import 'package:chatapp/ui/message/message_page.dart';
@@ -75,12 +76,7 @@ class _HomePageState extends State<HomePage> {
               title: user.username,
               subtitle: user.about,
               onTap: () {
-                /**
-                 * the then method used  to trigger  a rebuild of...
-                 * ...the parent widget when the new page is popped...
-                 * ...of the stack
-                 */
-                Navigator.pushNamed(context, MessagePage.routeName, arguments: user).then((_) => setState((){}));
+                Navigator.push(context, SlidePageRoute(child: MessagePage(user: user,)));
               }
               );
         });
