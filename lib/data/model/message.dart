@@ -1,19 +1,32 @@
-class Message{
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+
+class ChatMessage extends Equatable{
+  final String id;
+  final String senderId;
+  final String receiverId;
   final String message;
-  final String sender;
-  final String dateTime;
+  final String timestamp;
 
-  Message({required this.message, required this.sender, required this.dateTime});
+  const ChatMessage({
+    required this.id,
+    required this.senderId,
+    required this.receiverId,
+    required this.message,
+    required this.timestamp,
+  });
+
+  factory ChatMessage.fromMap(String id, Map<String, dynamic> map) {
+    return ChatMessage(
+      id: id,
+      senderId: map['senderId'] as String,
+      receiverId: map['receiverId'] as String,
+      message: map['message'] as String,
+      timestamp: map['timestamp'] as String,
+    );
+  }
+
+  @override
+  List<Object?> get props => [id, senderId, receiverId, message, timestamp];
+
 }
-
-// ** dummy message
-List<Message> dummyMessage = [
-  Message(message: 'Halo', sender: 'dodi', dateTime: '1969-07-20 20:18:04Z'),
-  Message(message: 'hai', sender: 'joko', dateTime: '1969-07-20 20:18:04Z'),
-  Message(message: 'knp tu?', sender: 'joko', dateTime: '1969-07-20 20:18:04Z'),
-  Message(message: 'ngetest', sender: 'dodi', dateTime: '1969-07-20 20:18:04Z'),
-  Message(message: 'Kamu sehat kan? lagi sibuk apa sekarang?', sender: 'dodi', dateTime: '1969-07-20 20:18:04Z'),
-  Message(message: 'Aku sehak ka fjlakjklfaalkjgkalj g jfk af jalkfgj flkgj lf gfg jf glfg f flgj glfg dlfkgjdfg fg fglfjd dfg?', sender: 'joko', dateTime: '1969-07-20 20:18:04Z'),
-  Message(message: 'klo kamu?', sender: 'joko', dateTime: '1969-07-20 20:18:04Z'),
-  Message(message: 'Aku sehak ka fjlakjklfaalkjgkalj g jfk af jalkfgj flkgj lf gfg jf glfg f flgj glfg dlfkgjdfg fg fglfjd dfg?', sender: 'dodi', dateTime: '1969-07-20 20:18:04Z'),
-];
