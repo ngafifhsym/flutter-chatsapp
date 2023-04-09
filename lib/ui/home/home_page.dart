@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             },
             builder: (context, state) {
               if (state is UserSuccess) {
-                final filteredUsers = state.users.where((user) => user.username != 'beranju').toList();
+                final filteredUsers = state.users.where((user) => user.username != 'farizqi').toList();
                 return listChat(filteredUsers);
               }
               if (state is UserFailed) {
