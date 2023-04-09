@@ -1,5 +1,8 @@
+import 'dart:developer' as developer;
+
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
+import 'package:chatapp/data/cubit/message_cubit.dart';
 import 'package:chatapp/data/model/chat_user.dart';
 import 'package:chatapp/data/model/message.dart';
 import 'package:chatapp/widget/chat_text_field.dart';
@@ -7,23 +10,42 @@ import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/current_message_item.dart';
 import 'package:chatapp/widget/guest_message_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MessagePage extends StatefulWidget {
   static const String routeName = '/message-page';
+  final ChatUser user;
 
-  const MessagePage({Key? key}) : super(key: key);
+  const MessagePage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<MessagePage> createState() => _MessagePageState();
 }
 
 class _MessagePageState extends State<MessagePage> {
-  final TextEditingController controller = TextEditingController();
+  // ** temp variable
+  final String currentUserId = 'farizqi@walmail.com';
+  String groupChatId = '';
+
+  @override
+  void initState() {
+    setLocal(widget.user);
+    super.initState();
+    context.read<MessageCubit>().fetchChatMessage(groupChatId);
+  }
+
+  void setLocal(ChatUser dataUser) {
+    if (currentUserId.compareTo(dataUser.id) > 0) {
+      groupChatId = '$currentUserId-${dataUser.id}';
+      developer.log(groupChatId);
+    } else {
+      groupChatId = '${dataUser.id}-$currentUserId';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    final dataUser = ModalRoute.of(context)?.settings.arguments as ChatUser;
+    final dataUser = widget.user;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,14 +53,20 @@ class _MessagePageState extends State<MessagePage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios, size: 20,),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+          ),
         ),
         title: ListTile(
-          leading: Hero(
-            tag: dataUser.username,
-            child: CircleImageWidget(networkImage: dataUser.photoUrl,),
+          leading: CircleImageWidget(
+            networkImage: dataUser.photoUrl,
           ),
-          title: Text(dataUser.username, style: getWhite16SemiBoldTextStyle(),),
+          title: Text(
+            dataUser.username,
+            style: getWhite16SemiBoldTextStyle(),
+          ),
+          subtitle: Text(groupChatId),
         ),
         actions: [
           IconButton(
@@ -52,18 +80,34 @@ class _MessagePageState extends State<MessagePage> {
       body: Column(
         children: [
           Expanded(
-              child: ListView.builder(
-            itemCount: dummyMessage.length,
-            itemBuilder: (context, index) {
-              bool isCurrent = dummyMessage[index].sender == 'joko';
-              if (isCurrent) {
-                return CurrentMessageItem(message: dummyMessage[index]);
-              } else {
-                return GuestMessageItem(message: dummyMessage[index]);
-              }
-            },
-          )),
-          const CustomChatTextField()
+            child: groupChatId.isNotEmpty
+                ? BlocBuilder<MessageCubit, MessageState>(
+                    builder: (context, state) {
+                      if (state is MessageSuccess) {
+                        return listMessage(state.messages);
+                      }
+                      if (state is MessageLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      if (state is MessageFailed) {
+                        developer.log(state.error);
+                      }
+
+                      return Container();
+                    },
+                  )
+                : const Center(
+                    child: Text('empty chat'),
+                  ),
+          ),
+          CustomChatTextField(
+            groupChatId: groupChatId,
+            senderId: currentUserId,
+            receiverId: dataUser.id,
+          )
         ],
       ),
     );
@@ -95,6 +139,22 @@ class _MessagePageState extends State<MessagePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget listMessage(List<ChatMessage> messages) {
+    return ListView.builder(
+      itemCount: messages.length,
+      itemBuilder: (context, index) {
+        final message = messages[index];
+        bool isCurrent =
+            message.senderId == 'farizqi@walmail.com' ? true : false;
+        if (isCurrent) {
+          return CurrentMessageItem(message: message);
+        } else {
+          return GuestMessageItem(message: message);
+        }
+      },
     );
   }
 }
