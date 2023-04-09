@@ -37,7 +37,7 @@ class GuestMessageItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                dateFormatter(message.timestamp),
+                dateFormatter(int.parse(message.timestamp)),
                 textAlign: TextAlign.end,
                 style: getWhite10RegularTextStyle(),
               ),

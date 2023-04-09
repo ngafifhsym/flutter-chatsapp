@@ -36,7 +36,7 @@ class CurrentMessageItem extends StatelessWidget {
                 height: 4,
               ),
               Text(
-                dateFormatter(message.timestamp),
+                dateFormatter(int.parse(message.timestamp)),
                 textAlign: TextAlign.start,
                 style: getPrimary10RegularTextStyle(),
               ),
