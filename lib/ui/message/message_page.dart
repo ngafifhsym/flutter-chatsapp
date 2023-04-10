@@ -5,7 +5,6 @@ import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/cubit/message_cubit.dart';
 import 'package:chatapp/data/model/chat_user.dart';
 import 'package:chatapp/data/model/message.dart';
-import 'package:chatapp/widget/chat_text_field.dart';
 import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/current_message_item.dart';
 import 'package:chatapp/widget/guest_message_item.dart';
