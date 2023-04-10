@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:chatapp/data/service/message_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../model/message.dart';
 
@@ -40,25 +42,47 @@ class MessageCubit extends Cubit<MessageState> {
   }
 
   Future<void> addMessage(String chatId, String senderId, String receiverId,
-      String message, String timestamp) async {
+      String message, String timestamp, File? imageFile) async {
     DocumentReference docRef = MessageService()
         .messageRef
         .doc(chatId)
         .collection('messages')
         .doc(timestamp);
 
+    // ** upload image to get image url
+    String? url = await uploadImageToStorage(chatId, imageFile);
+
     final Map<String, dynamic> messages = {
       'senderId': senderId,
       'receiverId': receiverId,
       'message': message,
-      'timestamp': timestamp
+      'timestamp': timestamp,
+      'imageUrl': url
     };
+
+    // ** add the message into firestore
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         transaction.set(docRef, messages);
       });
     } catch (e) {
       developer.log(e.toString());
+    }
+  }
+
+  Future<String?> uploadImageToStorage(String chatId, File? imageFile) async {
+    if (imageFile == null) return null;
+
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference ref = MessageService().chatStorage.child(chatId).child(fileName);
+
+    try{
+      await ref.putFile(imageFile);
+      String imageUrl = await ref.getDownloadURL();
+      return imageUrl;
+    }catch(e){
+      developer.log(e.toString());
+      return null;
     }
   }
 
