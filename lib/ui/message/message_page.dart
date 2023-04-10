@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
@@ -27,6 +28,8 @@ class _MessagePageState extends State<MessagePage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+
+  File? imageFile;
 
   // ** temp variable
   final String currentUserId = 'farizqi@walmail.com';
@@ -119,57 +122,77 @@ class _MessagePageState extends State<MessagePage> {
         decoration: BoxDecoration(
           color: ColorManager.secondaryColor,
         ),
-        child: Row(
+        child: Column(
           children: [
-            IconButton(
-              onPressed: () {
-                _showPopupMenu(context);
-              },
-              icon: const Icon(
-                Icons.attach_file,
-                color: Colors.white,
-              ),
+            imageFile != null
+                ? Container(
+                    width: double.infinity,
+                    color: ColorManager.secondaryColor,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    constraints:
+                        const BoxConstraints(minHeight: 0, maxHeight: 250),
+                    child: GestureDetector(
+                      onLongPress: (){
+                        setState(() {
+                          imageFile = null;
+                        });
+                      },
+                      child: Image.file(
+                        imageFile!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : Container(),
+            Row(
+              children: [
+                Flexible(
+                  child: TextField(
+                    controller: _textEditingController,
+                    focusNode: _focusNode,
+                    maxLines: 5,
+                    minLines: 1,
+                    style: getWhite14RegularTextStyle(),
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                        hintText: 'Message',
+                        hintStyle: getWhite14RegularTextStyle(),
+                        filled: true,
+                        border: InputBorder.none,
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                            Icons.photo,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            selectImage(ImageSource.gallery);
+                          },
+                        )),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (_textEditingController.text.isNotEmpty) {
+                      final String date =
+                          DateTime.now().millisecondsSinceEpoch.toString();
+                      final chatId = groupChatId;
+                      final senderId = currentUserId;
+                      final receiverId = dataUser.id;
+                      final message = _textEditingController.text;
+                      context.read<MessageCubit>().addMessage(
+                          chatId, senderId, receiverId, message, date, imageFile);
+                      _textEditingController.clear();
+                      _focusNode.unfocus();
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.send,
+                    color: Colors.white,
+                  ),
+                )
+              ],
             ),
-            Flexible(
-              child: TextField(
-                controller: _textEditingController,
-                focusNode: _focusNode,
-                maxLines: 5,
-                minLines: 1,
-                style: getWhite14RegularTextStyle(),
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                    hintText: 'Message',
-                    hintStyle: getWhite14RegularTextStyle(),
-                    filled: true,
-                    border: InputBorder.none),
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                if (_textEditingController.text.isNotEmpty) {
-                  final String date =
-                      DateTime.now().millisecondsSinceEpoch.toString();
-                  final chatId = groupChatId;
-                  final senderId = currentUserId;
-                  final receiverId = dataUser.id;
-                  final message = _textEditingController.text;
-                  context
-                      .read<MessageCubit>()
-                      .addMessage(chatId, senderId, receiverId, message, date);
-                  _textEditingController.clear();
-                  _scrollController.animateTo(
-                      _scrollController.position.maxScrollExtent,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.ease);
-                  _focusNode.unfocus();
-                }
-              },
-              icon: const Icon(
-                Icons.send,
-                color: Colors.white,
-              ),
-            )
           ],
         ),
       );
@@ -245,68 +268,70 @@ class _MessagePageState extends State<MessagePage> {
     });
   }
 
-  void _showPopupMenu(BuildContext context) async {
-    final size = MediaQuery.of(context).size;
-    await showMenu(
-      context: context,
-      color: ColorManager.secondaryColor,
-      position: RelativeRect.fromLTRB(10, size.height, size.width, 100),
-      items: [
-        PopupMenuItem(
-          child: TextButton.icon(
-            onPressed: () {
-              selectImage(ImageSource.gallery);
-            },
-            icon: const Icon(Icons.image),
-            label: Text(
-              'Image',
-              style: getWhite14RegularTextStyle(),
-            ),
-          ),
-        ),
-        PopupMenuItem(
-          child: TextButton.icon(
-            onPressed: () {
-              selectFile();
-            },
-            icon: const Icon(Icons.file_present_sharp),
-            label: Text(
-              'File',
-              style: getWhite14RegularTextStyle(),
-            ),
-          ),
-        ),
-        PopupMenuItem(
-          child: TextButton.icon(
-            onPressed: () {
-              selectVideo(ImageSource.gallery);
-            },
-            icon: const Icon(Icons.video_collection),
-            label: Text(
-              'Video',
-              style: getWhite14RegularTextStyle(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // void _showPopupMenu() async {
+  //   final size = MediaQuery.of(context).size;
+  //   await showMenu(
+  //     context: context,
+  //     color: ColorManager.secondaryColor,
+  //     position: RelativeRect.fromLTRB(1000.0, 1000.0, 0.0, 0.0),
+  //     items: [
+  //       PopupMenuItem(
+  //         child: TextButton.icon(
+  //           onPressed: () {
+  //             selectImage(ImageSource.gallery);
+  //           },
+  //           icon: const Icon(Icons.image),
+  //           label: Text(
+  //             'Image',
+  //             style: getWhite14RegularTextStyle(),
+  //           ),
+  //         ),
+  //       ),
+  //       PopupMenuItem(
+  //         child: TextButton.icon(
+  //           onPressed: () {
+  //             selectFile();
+  //           },
+  //           icon: const Icon(Icons.file_present_sharp),
+  //           label: Text(
+  //             'File',
+  //             style: getWhite14RegularTextStyle(),
+  //           ),
+  //         ),
+  //       ),
+  //       PopupMenuItem(
+  //         child: TextButton.icon(
+  //           onPressed: () {
+  //             selectVideo(ImageSource.gallery);
+  //           },
+  //           icon: const Icon(Icons.video_collection),
+  //           label: Text(
+  //             'Video',
+  //             style: getWhite14RegularTextStyle(),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Future<XFile?> selectImage(ImageSource source) async {
+  void selectImage(ImageSource source) async {
     final image = await ImagePicker()
         .pickImage(source: source, maxHeight: 1800, maxWidth: 1800);
-    return image;
+    setState(() {
+      imageFile = image != null ? File(image.path) : null;
+    });
   }
 
-  Future<XFile?> selectVideo(ImageSource source) async {
-    final video = await ImagePicker().pickVideo(source: source);
-    return video;
-  }
-
-  Future<List<XFile>?> selectFile() async {
-    List<XFile>? file;
-    final result = await FilePicker.platform.pickFiles(allowMultiple: true);
-    file = result?.paths.map((e) => XFile(e!)).toList();
-    return file;
-  }
+  // Future<XFile?> selectVideo(ImageSource source) async {
+  //   final video = await ImagePicker().pickVideo(source: source);
+  //   return video;
+  // }
+  //
+  // Future<List<XFile>?> selectFile() async {
+  //   List<XFile>? file;
+  //   final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+  //   file = result?.paths.map((e) => XFile(e!)).toList();
+  //   return file;
+  // }
 }
