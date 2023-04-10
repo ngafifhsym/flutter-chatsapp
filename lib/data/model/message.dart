@@ -7,6 +7,7 @@ class ChatMessage extends Equatable{
   final String receiverId;
   final String message;
   final String timestamp;
+  final String? imageUrl;
 
   const ChatMessage({
     required this.id,
@@ -14,6 +15,7 @@ class ChatMessage extends Equatable{
     required this.receiverId,
     required this.message,
     required this.timestamp,
+    this.imageUrl
   });
 
   factory ChatMessage.fromMap(String id, Map<String, dynamic> map) {
@@ -23,6 +25,7 @@ class ChatMessage extends Equatable{
       receiverId: map['receiverId'] as String,
       message: map['message'] as String,
       timestamp: map['timestamp'] as String,
+      imageUrl: map['imageUrl'] as String?
     );
   }
 
