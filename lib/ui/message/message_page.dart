@@ -9,8 +9,10 @@ import 'package:chatapp/widget/chat_text_field.dart';
 import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/current_message_item.dart';
 import 'package:chatapp/widget/guest_message_item.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MessagePage extends StatefulWidget {
   static const String routeName = '/message-page';
@@ -23,6 +25,10 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _textEditingController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
   // ** temp variable
   final String currentUserId = 'farizqi@walmail.com';
   String groupChatId = '';
@@ -32,6 +38,14 @@ class _MessagePageState extends State<MessagePage> {
     setLocal(widget.user);
     super.initState();
     context.read<MessageCubit>().fetchChatMessage(groupChatId);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _textEditingController.dispose();
+    _focusNode.dispose();
+    super.dispose();
   }
 
   void setLocal(ChatUser dataUser) {
@@ -47,8 +61,9 @@ class _MessagePageState extends State<MessagePage> {
   Widget build(BuildContext context) {
     final dataUser = widget.user;
 
-    return Scaffold(
-      appBar: AppBar(
+    // ** app bar
+    PreferredSizeWidget appBar() {
+      return AppBar(
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -66,7 +81,6 @@ class _MessagePageState extends State<MessagePage> {
             dataUser.username,
             style: getWhite16SemiBoldTextStyle(),
           ),
-          subtitle: Text(groupChatId),
         ),
         actions: [
           IconButton(
@@ -76,7 +90,94 @@ class _MessagePageState extends State<MessagePage> {
             icon: const Icon(Icons.menu),
           ),
         ],
-      ),
+      );
+    }
+
+    // ** list of message
+    Widget listMessage(List<ChatMessage> messages) {
+      return ListView.builder(
+        itemCount: messages.length,
+        controller: _scrollController,
+        itemBuilder: (context, index) {
+          final message = messages[index];
+          bool isCurrent =
+              message.senderId == 'farizqi@walmail.com' ? true : false;
+          if (isCurrent) {
+            return CurrentMessageItem(message: message);
+          } else {
+            return GuestMessageItem(message: message);
+          }
+        },
+      );
+    }
+
+    // ** text field for send message
+    Widget textFieldMessage() {
+      return Container(
+        width: double.infinity,
+        alignment: Alignment.bottomCenter,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: ColorManager.secondaryColor,
+        ),
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                _showPopupMenu(context);
+              },
+              icon: const Icon(
+                Icons.attach_file,
+                color: Colors.white,
+              ),
+            ),
+            Flexible(
+              child: TextField(
+                controller: _textEditingController,
+                focusNode: _focusNode,
+                maxLines: 5,
+                minLines: 1,
+                style: getWhite14RegularTextStyle(),
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                    hintText: 'Message',
+                    hintStyle: getWhite14RegularTextStyle(),
+                    filled: true,
+                    border: InputBorder.none),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                if (_textEditingController.text.isNotEmpty) {
+                  final String date =
+                      DateTime.now().millisecondsSinceEpoch.toString();
+                  final chatId = groupChatId;
+                  final senderId = currentUserId;
+                  final receiverId = dataUser.id;
+                  final message = _textEditingController.text;
+                  context
+                      .read<MessageCubit>()
+                      .addMessage(chatId, senderId, receiverId, message, date);
+                  _textEditingController.clear();
+                  _scrollController.animateTo(
+                      _scrollController.position.maxScrollExtent,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.ease);
+                  _focusNode.unfocus();
+                }
+              },
+              icon: const Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: appBar(),
       body: Column(
         children: [
           Expanded(
@@ -84,6 +185,7 @@ class _MessagePageState extends State<MessagePage> {
                 ? BlocBuilder<MessageCubit, MessageState>(
                     builder: (context, state) {
                       if (state is MessageSuccess) {
+                        scrollToLastChat();
                         return listMessage(state.messages);
                       }
                       if (state is MessageLoading) {
@@ -91,23 +193,17 @@ class _MessagePageState extends State<MessagePage> {
                           child: CircularProgressIndicator(),
                         );
                       }
-
                       if (state is MessageFailed) {
                         developer.log(state.error);
                       }
-
                       return Container();
                     },
                   )
                 : const Center(
-                    child: Text('empty chat'),
+                    child: Text('Something went wrong!'),
                   ),
           ),
-          CustomChatTextField(
-            groupChatId: groupChatId,
-            senderId: currentUserId,
-            receiverId: dataUser.id,
-          )
+          textFieldMessage(),
         ],
       ),
     );
@@ -142,19 +238,76 @@ class _MessagePageState extends State<MessagePage> {
     );
   }
 
-  Widget listMessage(List<ChatMessage> messages) {
-    return ListView.builder(
-      itemCount: messages.length,
-      itemBuilder: (context, index) {
-        final message = messages[index];
-        bool isCurrent =
-            message.senderId == 'farizqi@walmail.com' ? true : false;
-        if (isCurrent) {
-          return CurrentMessageItem(message: message);
-        } else {
-          return GuestMessageItem(message: message);
-        }
-      },
+  void scrollToLastChat() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
+  }
+
+  void _showPopupMenu(BuildContext context) async {
+    final size = MediaQuery.of(context).size;
+    await showMenu(
+      context: context,
+      color: ColorManager.secondaryColor,
+      position: RelativeRect.fromLTRB(10, size.height, size.width, 100),
+      items: [
+        PopupMenuItem(
+          child: TextButton.icon(
+            onPressed: () {
+              selectImage(ImageSource.gallery);
+            },
+            icon: const Icon(Icons.image),
+            label: Text(
+              'Image',
+              style: getWhite14RegularTextStyle(),
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: TextButton.icon(
+            onPressed: () {
+              selectFile();
+            },
+            icon: const Icon(Icons.file_present_sharp),
+            label: Text(
+              'File',
+              style: getWhite14RegularTextStyle(),
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          child: TextButton.icon(
+            onPressed: () {
+              selectVideo(ImageSource.gallery);
+            },
+            icon: const Icon(Icons.video_collection),
+            label: Text(
+              'Video',
+              style: getWhite14RegularTextStyle(),
+            ),
+          ),
+        ),
+      ],
     );
+  }
+
+  Future<XFile?> selectImage(ImageSource source) async {
+    final image = await ImagePicker()
+        .pickImage(source: source, maxHeight: 1800, maxWidth: 1800);
+    return image;
+  }
+
+  Future<XFile?> selectVideo(ImageSource source) async {
+    final video = await ImagePicker().pickVideo(source: source);
+    return video;
+  }
+
+  Future<List<XFile>?> selectFile() async {
+    List<XFile>? file;
+    final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+    file = result?.paths.map((e) => XFile(e!)).toList();
+    return file;
   }
 }
