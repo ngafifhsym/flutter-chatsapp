@@ -6,6 +6,7 @@ import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/cubit/message_cubit.dart';
 import 'package:chatapp/data/model/chat_user.dart';
 import 'package:chatapp/data/model/message.dart';
+import 'package:chatapp/ui/profile/profile_page.dart';
 import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/current_message_item.dart';
 import 'package:chatapp/widget/guest_message_item.dart';
@@ -75,13 +76,21 @@ class _MessagePageState extends State<MessagePage> {
             size: 20,
           ),
         ),
-        title: ListTile(
-          leading: CircleImageWidget(
-            networkImage: dataUser.photoUrl,
-          ),
-          title: Text(
-            dataUser.username,
-            style: getWhite16SemiBoldTextStyle(),
+        title: GestureDetector(
+          onTap: (){
+            Navigator.pushNamed(context, ProfilePage.routeName, arguments: dataUser,);
+          },
+          child: ListTile(
+            leading: Hero(
+              tag: dataUser.photoUrl,
+              child: CircleImageWidget(
+                networkImage: dataUser.photoUrl,
+              ),
+            ),
+            title: Text(
+              dataUser.username,
+              style: getWhite16SemiBoldTextStyle(),
+            ),
           ),
         ),
         actions: [
