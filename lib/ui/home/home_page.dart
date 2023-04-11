@@ -6,6 +6,7 @@ import 'package:chatapp/ui/message/message_page.dart';
 import 'package:chatapp/widget/chat_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../data/model/chat_user.dart';
 
@@ -31,6 +32,13 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Walchat'),
+        actions: [
+          IconButton(
+              onPressed: showPopUpMenu,
+              icon: const FaIcon(
+                FontAwesomeIcons.ellipsisVertical,
+              ))
+        ],
       ),
       body: SafeArea(
         child: BlocConsumer<UserCubit, UserState>(
@@ -44,7 +52,9 @@ class _HomePageState extends State<HomePage> {
           },
           builder: (context, state) {
             if (state is UserSuccess) {
-              final filteredUsers = state.users.where((user) => user.username != 'farizqi').toList();
+              final filteredUsers = state.users
+                  .where((user) => user.username != 'farizqi')
+                  .toList();
               return listChat(filteredUsers);
             }
             if (state is UserFailed) {
@@ -74,9 +84,28 @@ class _HomePageState extends State<HomePage> {
               title: user.username,
               subtitle: user.about,
               onTap: () {
-                Navigator.push(context, SlidePageRoute(child: MessagePage(user: user,)));
-              }
-              );
+                Navigator.push(
+                    context,
+                    SlidePageRoute(
+                        child: MessagePage(
+                      user: user,
+                    )));
+              });
         });
   }
+
+  void showPopUpMenu() => showMenu(
+          context: context,
+          color: ColorManager.secondaryColor,
+          position: const RelativeRect.fromLTRB(1000, 120, 0, 1000),
+          items: [
+            PopupMenuItem(
+                child: TextButton(
+              onPressed: () {},
+              child: Text(
+                'Settings',
+                style: getWhite14RegularTextStyle(),
+              ),
+            ))
+          ]);
 }
