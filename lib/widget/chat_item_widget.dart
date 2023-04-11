@@ -1,4 +1,5 @@
 import 'package:chatapp/ui/message/message_page.dart';
+import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:flutter/material.dart';
 
 class ChatItem extends StatelessWidget {
@@ -7,13 +8,12 @@ class ChatItem extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
-  const ChatItem({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
-    required this.onTap
-  });
+  const ChatItem(
+      {super.key,
+      required this.imageUrl,
+      required this.title,
+      required this.subtitle,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +23,10 @@ class ChatItem extends StatelessWidget {
         textColor: Colors.white,
         title: Text(title),
         subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(imageUrl),
+        leading: Hero(
+          tag: title,
+          child: CircleImageWidget(networkImage: imageUrl,)
         ),
-        trailing: const Text("10.00 PM"),
       ),
     );
   }
