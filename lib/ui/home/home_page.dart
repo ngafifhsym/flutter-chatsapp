@@ -33,32 +33,30 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Walchat'),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: BlocConsumer<UserCubit, UserState>(
-            listener: (context, state) {
-              if (state is UserFailed) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(state.error),
-                  backgroundColor: ColorManager.secondaryColor,
-                ));
-              }
-            },
-            builder: (context, state) {
-              if (state is UserSuccess) {
-                final filteredUsers = state.users.where((user) => user.username != 'farizqi').toList();
-                return listChat(filteredUsers);
-              }
-              if (state is UserFailed) {
-                return Center(
-                  child: Text(
-                    'Something went wrong!',
-                    style: getWhite14RegularTextStyle(),
-                  ),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),
+        child: BlocConsumer<UserCubit, UserState>(
+          listener: (context, state) {
+            if (state is UserFailed) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.error),
+                backgroundColor: ColorManager.secondaryColor,
+              ));
+            }
+          },
+          builder: (context, state) {
+            if (state is UserSuccess) {
+              final filteredUsers = state.users.where((user) => user.username != 'farizqi').toList();
+              return listChat(filteredUsers);
+            }
+            if (state is UserFailed) {
+              return Center(
+                child: Text(
+                  'Something went wrong!',
+                  style: getWhite14RegularTextStyle(),
+                ),
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
         ),
       ),
     );
