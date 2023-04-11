@@ -34,6 +34,14 @@ dependencies:
     sdk: flutter
   intl: ^0.18.0
   google_fonts: ^4.0.3
+  firebase_core: ^2.9.0
+  equatable: ^2.0.5
+  flutter_bloc: ^8.1.2
+  cloud_firestore: ^4.5.0
+  image_picker: ^0.8.7+1
+  file_picker: ^5.2.7
+  firebase_storage: ^11.1.0
+  font_awesome_flutter: ^10.4.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

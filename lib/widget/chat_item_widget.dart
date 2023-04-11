@@ -1,5 +1,8 @@
-import 'package:chatapp/ui/message/message_page.dart';
+import 'package:chatapp/common/style_manager.dart';
+import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:flutter/material.dart';
+
+import '../common/color_manager.dart';
 
 class ChatItem extends StatelessWidget {
   final String imageUrl;
@@ -7,13 +10,12 @@ class ChatItem extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
-  const ChatItem({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
-    required this.onTap
-  });
+  const ChatItem(
+      {super.key,
+      required this.imageUrl,
+      required this.title,
+      required this.subtitle,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +25,33 @@ class ChatItem extends StatelessWidget {
         textColor: Colors.white,
         title: Text(title),
         subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(imageUrl),
-        ),
-        trailing: const Text("10.00 PM"),
+        leading: Hero(
+            tag: title,
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text(title, style: getWhite14RegularTextStyle(),),
+                    backgroundColor: ColorManager.primaryColor,
+                    content: Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(imageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: CircleImageWidget(
+                networkImage: imageUrl,
+              ),
+            )),
       ),
     );
   }

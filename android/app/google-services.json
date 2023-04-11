@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "306426231076",
+    "project_id": "wal-chat",
+    "storage_bucket": "wal-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306426231076:android:21402dc4b6cd41445edbb1",
+        "android_client_info": {
+          "package_name": "com.example.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306426231076-697i2dbrgdbn4t6bemsh5dqr4os8c01l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfekIe_LTJqj8eKB5-y2m82ZXfxeH5eLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306426231076-697i2dbrgdbn4t6bemsh5dqr4os8c01l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
