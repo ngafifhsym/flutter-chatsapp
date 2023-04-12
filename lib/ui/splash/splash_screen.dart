@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chatapp/common/style_manager.dart';
+import 'package:chatapp/data/service/user_service.dart';
 import 'package:chatapp/ui/auth/register/register_page.dart';
 import 'package:chatapp/ui/auth/welcome_page.dart';
 import 'package:chatapp/ui/home/home_page.dart';
@@ -18,6 +19,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final timer = 5;
+  final currentUser = UserService().auth.currentUser;
 
   @override
   void initState() {
@@ -61,6 +63,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<Timer> _loadWidget() async {
     var duration = Duration(seconds: timer);
     return Timer(duration, () {
+      if (currentUser != null){
+        Navigator.pushReplacementNamed(context, HomePage.routeName);
+      }
       Navigator.pushReplacementNamed(context, WelcomePage.routeName);
     });
   }
