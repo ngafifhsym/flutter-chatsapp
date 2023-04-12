@@ -1,9 +1,12 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/slide_page_route.dart';
 import 'package:chatapp/common/style_manager.dart';
+import 'package:chatapp/data/cubit/auth_cubit.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
+import 'package:chatapp/ui/auth/login/login_screen.dart';
 import 'package:chatapp/ui/message/message_page.dart';
 import 'package:chatapp/widget/chat_item_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,10 +31,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Walchat'),
+        title: Text('Walchat ${user?.displayName}'),
         actions: [
           IconButton(
               onPressed: showPopUpMenu,
@@ -100,12 +105,27 @@ class _HomePageState extends State<HomePage> {
           position: const RelativeRect.fromLTRB(1000, 120, 0, 1000),
           items: [
             PopupMenuItem(
-                child: TextButton(
-              onPressed: () {},
-              child: Text(
-                'Settings',
-                style: getWhite14RegularTextStyle(),
+              child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  'Settings',
+                  style: getWhite14RegularTextStyle(),
+                ),
               ),
-            ))
+            ),
+            PopupMenuItem(
+              child: TextButton(
+                onPressed: () {
+                  context.read<AuthCubit>().signOut();
+                  if (FirebaseAuth.instance.currentUser == null){
+                    Navigator.pushNamed(context, LoginPage.routeName);
+                  }
+                },
+                child: Text(
+                  'LogOut',
+                  style: getWhite14RegularTextStyle(),
+                ),
+              ),
+            ),
           ]);
 }

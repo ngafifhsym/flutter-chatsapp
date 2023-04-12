@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:chatapp/data/model/chat_user.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../service/user_service.dart';
@@ -59,5 +60,9 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthFailed(e.toString()));
     }
+  }
+
+  void signOut() async {
+    await UserService().auth.signOut();
   }
 }
