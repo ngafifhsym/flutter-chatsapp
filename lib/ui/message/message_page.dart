@@ -182,15 +182,15 @@ class _MessagePageState extends State<MessagePage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    if (_textEditingController.text.isNotEmpty) {
+                    if (_textEditingController.text.isNotEmpty || imageFile != null) {
                       final String date =
                           DateTime.now().millisecondsSinceEpoch.toString();
                       final chatId = groupChatId;
                       final senderId = currentUserId;
                       final receiverId = dataUser.id;
-                      final message = _textEditingController.text;
+                      final message = _textEditingController.text.isEmpty ? null : _textEditingController.text;
                       context.read<MessageCubit>().addMessage(
-                          chatId, senderId, receiverId, message, date, imageFile);
+                          chatId, senderId, receiverId, date, message, imageFile);
                       _textEditingController.clear();
                       _focusNode.unfocus();
                     }

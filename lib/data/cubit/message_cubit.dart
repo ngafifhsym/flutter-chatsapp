@@ -42,7 +42,7 @@ class MessageCubit extends Cubit<MessageState> {
   }
 
   Future<void> addMessage(String chatId, String senderId, String receiverId,
-      String message, String timestamp, File? imageFile) async {
+      String timestamp, String? message, File? imageFile) async {
     DocumentReference docRef = MessageService()
         .messageRef
         .doc(chatId)
