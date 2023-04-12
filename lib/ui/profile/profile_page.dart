@@ -100,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.username),
+        title: Text(user.username.toString()),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Hero(
-                  tag: user.photoUrl,
+                  tag: user.photoUrl.toString(),
                   child: Container(
                     width: 150,
                     height: 150,
@@ -118,16 +118,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: NetworkImage(user.photoUrl))),
+                            image: NetworkImage(user.photoUrl.toString()))),
                   ),
                 ),
-                dataItem('Username', user.username, FontAwesomeIcons.userTie,
+                dataItem('Username', user.username.toString(), FontAwesomeIcons.userTie,
                     () {
                   editUsername('Edit Username');
                 }),
                 dataItem(
-                    'Email', user.about, FontAwesomeIcons.envelope, () => null),
-                dataItem('About', user.about, FontAwesomeIcons.circleInfo,
+                    'Email', user.about.toString(), FontAwesomeIcons.envelope, () => null),
+                dataItem('About', user.about.toString(), FontAwesomeIcons.circleInfo,
                     () => null),
               ],
             ),

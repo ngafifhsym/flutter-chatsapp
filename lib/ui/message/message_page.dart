@@ -82,13 +82,13 @@ class _MessagePageState extends State<MessagePage> {
           },
           child: ListTile(
             leading: Hero(
-              tag: dataUser.photoUrl,
+              tag: dataUser.photoUrl.toString(),
               child: CircleImageWidget(
-                networkImage: dataUser.photoUrl,
+                networkImage: dataUser.photoUrl.toString(),
               ),
             ),
             title: Text(
-              dataUser.username,
+              dataUser.username.toString(),
               style: getWhite16SemiBoldTextStyle(),
             ),
           ),

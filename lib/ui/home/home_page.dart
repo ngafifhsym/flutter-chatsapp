@@ -80,9 +80,9 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           final user = users[index];
           return ChatItem(
-              imageUrl: user.photoUrl,
-              title: user.username,
-              subtitle: user.about,
+              imageUrl: user.photoUrl.toString(),
+              title: user.username.toString(),
+              subtitle: user.about.toString(),
               onTap: () {
                 Navigator.push(
                     context,
