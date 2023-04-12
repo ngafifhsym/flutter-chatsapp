@@ -1,9 +1,9 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
+import 'package:chatapp/ui/auth/login/login_screen.dart';
 import 'package:chatapp/ui/auth/register/update_photo_page.dart';
 import 'package:chatapp/widget/custom_button.dart';
 import 'package:chatapp/widget/custom_text_field.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -87,8 +87,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             arguments: data);
                       } else {
                         /** jangan lupa menambahakan validasi otomatis menggunakan...
-                     * ...text editing controller listener
-                     */
+                         * ...text editing controller listener
+                         */
 
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
@@ -102,16 +102,25 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(
                   height: 16,
                 ),
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                      text: 'Sudah Punya Akun? ',
-                      style: getWhite14RegularTextStyle()),
-                  TextSpan(
-                      text: 'Login',
-                      style: getWhite16SemiBoldTextStyle(),
-                      recognizer: TapGestureRecognizer()..onTap = () {})
-                ]))
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Sudah punya akun?',
+                      style: getWhite12RegularTextStyle(),
+                    ),
+                    const SizedBox(width: 5,),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, LoginPage.routeName);
+                      },
+                      child: Text(
+                        'Login',
+                        style: getWhite14RegularTextStyle(),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),
