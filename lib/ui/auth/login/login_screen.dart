@@ -1,4 +1,3 @@
-import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/cubit/auth_cubit.dart';
 import 'package:chatapp/ui/auth/register/register_page.dart';
@@ -6,6 +5,8 @@ import 'package:chatapp/ui/home/home_page.dart';
 import 'package:chatapp/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../widget/custom_button.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = '/login-page';
@@ -59,54 +60,49 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _passwordController,
                     obSecure: true,
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 40, bottom: 50),
-                    child: Stack(children: [
-                      SizedBox(
-                        width: 220,
-                        height: 45,
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              backgroundColor: ColorManager.brown),
-                          onPressed: () {
-                            final email = _emailController.text;
-                            final password = _passwordController.text;
-                            if (email.isNotEmpty && password.isNotEmpty) {
-                              context
-                                  .read<AuthCubit>()
-                                  .loginWithEmail(email, password);
-                              if (state is AuthSuccess) {
-                                Navigator.pushReplacementNamed(
-                                    context, HomePage.routeName);
-                              }
-                              if (state is AuthLoading) {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                              }
-                              if (state is AuthFailed) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(state.error)));
-                              }
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Stack(children: [
+                    CustomButton(
+                        textButton: "Masuk",
+                        onTap: () {
+                          final email = _emailController.text;
+                          final password = _passwordController.text;
+                          if (email.isNotEmpty && password.isNotEmpty) {
+                            context
+                                .read<AuthCubit>()
+                                .loginWithEmail(email, password);
+                            if (state is AuthSuccess) {
+                              Navigator.pushReplacementNamed(
+                                  context, HomePage.routeName);
                             }
-                          },
-                          child: Text("Masuk",
-                              style: getWhite16SemiBoldTextStyle()),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        width: 20,
-                        height: 20,
-                        margin: const EdgeInsets.only(top: 2, left: 3),
-                        child: Visibility(
-                          visible: isLoading,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                    ]),
+                            if (state is AuthLoading) {
+                              setState(() {
+                                isLoading = !isLoading;
+                              });
+                            }
+                            if (state is AuthFailed) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(state.error)));
+                            }
+                          }
+                        }),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Visibility(
+                              visible: isLoading,
+                              child: Container(
+                                height: 24,
+                                width: 24,
+                                margin: const EdgeInsets.all(15),
+                                child: const CircularProgressIndicator(),
+                              ),
+                            ),
+                    )
+                  ]),
+                  const SizedBox(
+                    height: 40,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
