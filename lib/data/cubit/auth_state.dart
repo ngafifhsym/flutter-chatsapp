@@ -15,7 +15,7 @@ class AuthLoading extends AuthState {
 }
 
 class AuthSuccess extends AuthState {
-  final ChatUser user;
+  final User user;
 
   const AuthSuccess(this.user);
 

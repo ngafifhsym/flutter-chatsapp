@@ -32,6 +32,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  void loginWithEmail(String email, String password) async {
+    emit(AuthLoading());
+    try{
+      final credential = await UserService().auth.signInWithEmailAndPassword(email: email, password: password);
+      emit(AuthSuccess(credential.user!));
+    }on FirebaseAuthException catch (e){
+      emit(AuthFailed(e.message!));
+    }
+  }
+
   void signUpWithEmail(String name, String email, String password, File? img,
       String? about) async {
     emit(AuthLoading());
@@ -53,7 +63,7 @@ class AuthCubit extends Cubit<AuthState> {
             about: user.email.toString());
         final ref = UserService().userReference.doc(dataUser.id);
         ref.set(dataUser.toMap());
-        emit(AuthSuccess(dataUser));
+        emit(AuthSuccess(user));
       } else {
         emit(AuthFailed('Data user tidak ada'));
       }
