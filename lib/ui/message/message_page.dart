@@ -96,14 +96,6 @@ class _MessagePageState extends State<MessagePage> {
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSettingPopupMenu(context);
-            },
-            icon: const Icon(Icons.menu),
-          ),
-        ],
       );
     }
 
@@ -243,35 +235,6 @@ class _MessagePageState extends State<MessagePage> {
           textFieldMessage(),
         ],
       ),
-    );
-  }
-
-  void showSettingPopupMenu(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    showMenu(
-      context: context,
-      color: ColorManager.secondaryColor,
-      position: RelativeRect.fromLTRB(size.width, 92, 0, size.height),
-      items: [
-        PopupMenuItem(
-          child: TextButton(
-            onPressed: () {},
-            child: Text(
-              'Setting',
-              style: getWhite14RegularTextStyle(),
-            ),
-          ),
-        ),
-        PopupMenuItem(
-          child: TextButton(
-            onPressed: () {},
-            child: Text(
-              'Profile',
-              style: getWhite14RegularTextStyle(),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
