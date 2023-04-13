@@ -27,7 +27,7 @@ class WelcomePage extends StatelessWidget {
                 height: 300,
               ),
               CustomButton(textButton: 'Get Started', onTap: (){
-                Navigator.pushNamed(context, RegisterPage.routeName);
+                Navigator.pushReplacementNamed(context, RegisterPage.routeName);
               })
             ],
           ),

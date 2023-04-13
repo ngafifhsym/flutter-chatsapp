@@ -82,13 +82,13 @@ class _MessagePageState extends State<MessagePage> {
           },
           child: ListTile(
             leading: Hero(
-              tag: dataUser.photoUrl,
+              tag: dataUser.photoUrl.toString(),
               child: CircleImageWidget(
-                networkImage: dataUser.photoUrl,
+                networkImage: dataUser.photoUrl.toString(),
               ),
             ),
             title: Text(
-              dataUser.username,
+              dataUser.username.toString(),
               style: getWhite16SemiBoldTextStyle(),
             ),
           ),
@@ -182,15 +182,15 @@ class _MessagePageState extends State<MessagePage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    if (_textEditingController.text.isNotEmpty) {
+                    if (_textEditingController.text.isNotEmpty || imageFile != null) {
                       final String date =
                           DateTime.now().millisecondsSinceEpoch.toString();
                       final chatId = groupChatId;
                       final senderId = currentUserId;
                       final receiverId = dataUser.id;
-                      final message = _textEditingController.text;
+                      final message = _textEditingController.text.isEmpty ? null : _textEditingController.text;
                       context.read<MessageCubit>().addMessage(
-                          chatId, senderId, receiverId, message, date, imageFile);
+                          chatId, senderId, receiverId, date, message, imageFile);
                       _textEditingController.clear();
                       _focusNode.unfocus();
                     }

@@ -5,16 +5,16 @@ class ChatMessage extends Equatable{
   final String id;
   final String senderId;
   final String receiverId;
-  final String message;
   final String timestamp;
+  final String? message;
   final String? imageUrl;
 
   const ChatMessage({
     required this.id,
     required this.senderId,
     required this.receiverId,
-    required this.message,
     required this.timestamp,
+    this.message,
     this.imageUrl
   });
 
@@ -23,7 +23,8 @@ class ChatMessage extends Equatable{
       id: id,
       senderId: map['senderId'] as String,
       receiverId: map['receiverId'] as String,
-      message: map['message'] as String,
+      message: map['message'] as String?
+        ,
       timestamp: map['timestamp'] as String,
       imageUrl: map['imageUrl'] as String?
     );

@@ -14,12 +14,12 @@ class UserCubit extends Cubit<UserState> {
   StreamSubscription? _streamSubscription;
 
   final Stream<List<ChatUser>> _streamUsers = UserService()
-      .userRef
+      .userReference
       .snapshots()
       .map(
         (querySnapshot) => querySnapshot.docs
             .map((doc) =>
-                ChatUser.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+                ChatUser.fromMap(doc.data() as Map<String, dynamic>))
             .toList(),
       );
 

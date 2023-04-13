@@ -27,12 +27,27 @@ class GuestMessageItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                message.message,
-                maxLines: 4,
-                textAlign: TextAlign.start,
-                style: getWhite14RegularTextStyle(),
-              ),
+              message.imageUrl != null
+                  ? Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 6),
+                      constraints: const BoxConstraints(maxHeight: 150),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(message.imageUrl!),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+              message.message != null
+                  ? Text(
+                      message.message!,
+                      maxLines: 4,
+                      textAlign: TextAlign.start,
+                      style: getWhite14RegularTextStyle(),
+                    )
+                  : const SizedBox(),
               const SizedBox(
                 height: 4,
               ),
