@@ -74,8 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                                 .read<AuthCubit>()
                                 .loginWithEmail(email, password);
                             if (state is AuthSuccess) {
-                              Navigator.pushReplacementNamed(
-                                  context, HomePage.routeName);
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  HomePage.routeName, (route) => route.isFirst);
                             }
                             if (state is AuthLoading) {
                               setState(() {
@@ -91,14 +91,14 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: Visibility(
-                              visible: isLoading,
-                              child: Container(
-                                height: 24,
-                                width: 24,
-                                margin: const EdgeInsets.all(15),
-                                child: const CircularProgressIndicator(),
-                              ),
-                            ),
+                        visible: isLoading,
+                        child: Container(
+                          height: 24,
+                          width: 24,
+                          margin: const EdgeInsets.all(15),
+                          child: const CircularProgressIndicator(),
+                        ),
+                      ),
                     )
                   ]),
                   const SizedBox(
