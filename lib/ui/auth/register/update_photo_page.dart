@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
 
 import '../../../common/color_manager.dart';
 
@@ -21,6 +22,7 @@ class UpdatePhotoPage extends StatefulWidget {
 }
 
 class _UpdatePhotoPageState extends State<UpdatePhotoPage> {
+  var logger = Logger();
   bool isLoading = false;
   File? imageFile;
 
@@ -72,18 +74,42 @@ class _UpdatePhotoPageState extends State<UpdatePhotoPage> {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    // ** fetching the current user who was already registered
     final dataUser = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<AuthCubit, AuthState>(
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSuccess) {
+              logger.i('upload photo berhasil');
+              Navigator.pushReplacementNamed(
+                context,
+                UpdatePhotoPage.routeName,
+              );
+            }
+            if (state is AuthLoading) {
+              logger.i('uploading photo...');
+              isLoading = !isLoading;
+            }
+            if (state is AuthFailed) {
+              logger.e(state.error);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  'Something went wrong, try again!',
+                  style: getWhite14RegularTextStyle(),
+                ),
+                backgroundColor: ColorManager.secondaryColor,
+              ));
+            }
+          },
           builder: (context, state) {
             return Padding(
               padding:
@@ -102,9 +128,12 @@ class _UpdatePhotoPageState extends State<UpdatePhotoPage> {
                             context
                                 .read<AuthCubit>()
                                 .uploadPhoto(imageFile!, dataUser.uid);
-                            Navigator.pushReplacementNamed(context, LoginPage.routeName);
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select an image')));
+                            Navigator.pushReplacementNamed(
+                                context, LoginPage.routeName);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Select an image')));
                           }
                         }),
                     Align(
@@ -119,13 +148,14 @@ class _UpdatePhotoPageState extends State<UpdatePhotoPage> {
                     )
                   ]),
                   TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, LoginPage.routeName);
-                      },
-                      child: Text(
-                        'Skip',
-                        style: getWhite14RegularTextStyle(),
-                      ))
+                    onPressed: () {
+                      Navigator.pushNamed(context, LoginPage.routeName);
+                    },
+                    child: Text(
+                      'Skip',
+                      style: getWhite14RegularTextStyle(),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -135,6 +165,7 @@ class _UpdatePhotoPageState extends State<UpdatePhotoPage> {
     );
   }
 
+  /// select an image from phone
   void selectImg() async {
     final imagePicked = await ImagePicker().pickImage(
         source: ImageSource.gallery, maxHeight: 1800, maxWidth: 1800);
