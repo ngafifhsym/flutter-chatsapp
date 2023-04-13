@@ -44,7 +44,7 @@ class GuestMessageItem extends StatelessWidget {
                   ? Text(
                       message.message!,
                       maxLines: 4,
-                      textAlign: TextAlign.start,
+                      textAlign: TextAlign.left,
                       style: getWhite14RegularTextStyle(),
                     )
                   : const SizedBox(),
