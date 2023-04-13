@@ -5,6 +5,7 @@ import 'package:chatapp/data/cubit/auth_cubit.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
 import 'package:chatapp/ui/auth/login/login_screen.dart';
 import 'package:chatapp/ui/message/message_page.dart';
+import 'package:chatapp/ui/profile/profile_page.dart';
 import 'package:chatapp/widget/chat_item_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Walchat ${currentUser?.displayName}'),
+        title: const Text('WalChat'),
         actions: [
           IconButton(
               onPressed: showPopUpMenu,
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             if (state is UserSuccess) {
               final filteredUsers = state.users
-                  .where((user) => user.username != 'farizqi')
+                  .where((user) => user.id != currentUser?.uid)
                   .toList();
               return listChat(filteredUsers);
             }
@@ -114,9 +115,14 @@ class _HomePageState extends State<HomePage> {
           items: [
             PopupMenuItem(
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (currentUser != null){
+                    final ChatUser userData = ChatUser(id: currentUser!.uid, username: currentUser?.displayName, photoUrl: currentUser?.photoURL, about: currentUser?.email);
+                    Navigator.pushNamed(context, ProfilePage.routeName, arguments: userData);
+                  }
+                },
                 child: Text(
-                  'Settings',
+                  'Profile',
                   style: getWhite14RegularTextStyle(),
                 ),
               ),
