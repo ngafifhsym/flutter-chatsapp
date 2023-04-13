@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Walchat ${currentUser?.displayName}'),
+        title: const Text('WalChat'),
         actions: [
           IconButton(
               onPressed: showPopUpMenu,
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             if (state is UserSuccess) {
               final filteredUsers = state.users
-                  .where((user) => user.username != 'farizqi')
+                  .where((user) => user.id != currentUser?.uid)
                   .toList();
               return listChat(filteredUsers);
             }
