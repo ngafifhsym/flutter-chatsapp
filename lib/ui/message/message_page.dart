@@ -11,6 +11,7 @@ import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/current_message_item.dart';
 import 'package:chatapp/widget/guest_message_item.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,15 +30,13 @@ class _MessagePageState extends State<MessagePage> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-
+  late User? currentUser;
   File? imageFile;
-
-  // ** temp variable
-  final String currentUserId = 'farizqi@walmail.com';
   String groupChatId = '';
 
   @override
   void initState() {
+    currentUser = FirebaseAuth.instance.currentUser;
     setLocal(widget.user);
     super.initState();
     context.read<MessageCubit>().fetchChatMessage(groupChatId);
@@ -52,11 +51,15 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   void setLocal(ChatUser dataUser) {
-    if (currentUserId.compareTo(dataUser.id) > 0) {
-      groupChatId = '$currentUserId-${dataUser.id}';
-      developer.log(groupChatId);
-    } else {
-      groupChatId = '${dataUser.id}-$currentUserId';
+    if (currentUser != null){
+      final uid = currentUser!.uid;
+      if (uid.compareTo(dataUser.id) > 0) {
+        groupChatId = '$uid-${dataUser.id}';
+        developer.log(groupChatId);
+      } else {
+        groupChatId = '${dataUser.id}-$uid';
+      }
+
     }
   }
 
@@ -112,7 +115,7 @@ class _MessagePageState extends State<MessagePage> {
         itemBuilder: (context, index) {
           final message = messages[index];
           bool isCurrent =
-              message.senderId == 'farizqi@walmail.com' ? true : false;
+              message.senderId == currentUser?.uid ? true : false;
           if (isCurrent) {
             return CurrentMessageItem(message: message);
           } else {
@@ -182,15 +185,18 @@ class _MessagePageState extends State<MessagePage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    if (_textEditingController.text.isNotEmpty || imageFile != null) {
-                      final String date =
-                          DateTime.now().millisecondsSinceEpoch.toString();
-                      final chatId = groupChatId;
-                      final senderId = currentUserId;
-                      final receiverId = dataUser.id;
-                      final message = _textEditingController.text.isEmpty ? null : _textEditingController.text;
-                      context.read<MessageCubit>().addMessage(
-                          chatId, senderId, receiverId, date, message, imageFile);
+                    if (_textEditingController.text.isNotEmpty || imageFile != null ) {
+                      if (currentUser != null){
+                        final String date =
+                        DateTime.now().millisecondsSinceEpoch.toString();
+                        final chatId = groupChatId;
+                        final senderId = currentUser!.uid;
+                        final receiverId = dataUser.id;
+                        final message = _textEditingController.text.isEmpty ? null : _textEditingController.text;
+                        context.read<MessageCubit>().addMessage(
+                            chatId, senderId, receiverId, date, message, imageFile);
+                      }
+                      imageFile = null;
                       _textEditingController.clear();
                       _focusNode.unfocus();
                     }
@@ -276,53 +282,6 @@ class _MessagePageState extends State<MessagePage> {
       }
     });
   }
-
-  // void _showPopupMenu() async {
-  //   final size = MediaQuery.of(context).size;
-  //   await showMenu(
-  //     context: context,
-  //     color: ColorManager.secondaryColor,
-  //     position: RelativeRect.fromLTRB(1000.0, 1000.0, 0.0, 0.0),
-  //     items: [
-  //       PopupMenuItem(
-  //         child: TextButton.icon(
-  //           onPressed: () {
-  //             selectImage(ImageSource.gallery);
-  //           },
-  //           icon: const Icon(Icons.image),
-  //           label: Text(
-  //             'Image',
-  //             style: getWhite14RegularTextStyle(),
-  //           ),
-  //         ),
-  //       ),
-  //       PopupMenuItem(
-  //         child: TextButton.icon(
-  //           onPressed: () {
-  //             selectFile();
-  //           },
-  //           icon: const Icon(Icons.file_present_sharp),
-  //           label: Text(
-  //             'File',
-  //             style: getWhite14RegularTextStyle(),
-  //           ),
-  //         ),
-  //       ),
-  //       PopupMenuItem(
-  //         child: TextButton.icon(
-  //           onPressed: () {
-  //             selectVideo(ImageSource.gallery);
-  //           },
-  //           icon: const Icon(Icons.video_collection),
-  //           label: Text(
-  //             'Video',
-  //             style: getWhite14RegularTextStyle(),
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   void selectImage(ImageSource source) async {
     final image = await ImagePicker()
