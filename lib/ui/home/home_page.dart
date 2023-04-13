@@ -23,20 +23,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late User? currentUser;
+
   @override
   void initState() {
     context.read<UserCubit>().fetchUsers();
+    currentUser = FirebaseAuth.instance.currentUser;
     super.initState();
+    checkUser(currentUser);
+  }
+
+  void checkUser(User? currentUser) {
+    if (currentUser == null) {
+      Navigator.pushReplacementNamed(context, LoginPage.routeName);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Walchat ${user?.displayName}'),
+        title: Text('Walchat ${currentUser?.displayName}'),
         actions: [
           IconButton(
               onPressed: showPopUpMenu,
@@ -116,10 +124,8 @@ class _HomePageState extends State<HomePage> {
             PopupMenuItem(
               child: TextButton(
                 onPressed: () {
-                  context.read<AuthCubit>().signOut();
-                  if (FirebaseAuth.instance.currentUser == null){
-                    Navigator.pushNamed(context, LoginPage.routeName);
-                  }
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route)=> false);
                 },
                 child: Text(
                   'LogOut',

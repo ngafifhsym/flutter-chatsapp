@@ -92,6 +92,10 @@ class _LoginPageState extends State<LoginPage> {
                             context
                                 .read<AuthCubit>()
                                 .loginWithEmail(email, password);
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Field tidak boleh kosong'))
+                            );
                           }
                         },
                       ),
@@ -119,10 +123,9 @@ class _LoginPageState extends State<LoginPage> {
                           style: getWhite12RegularTextStyle()),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
+                          Navigator.pushReplacementNamed(
                               context,
-                              RegisterPage.routeName,
-                              (routeName) => routeName.isFirst);
+                              RegisterPage.routeName,);
                         },
                         child: Text(
                           "SignUp",

@@ -52,19 +52,21 @@ class AuthCubit extends Cubit<AuthState> {
       String name, String email, String password, String? about) async {
     emit(AuthLoading());
     try {
-      userAuth
+      await userAuth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) {
         final user = value.user;
         user?.updateDisplayName(name);
         if (user != null) {
-          final dataUser = ChatUser(
-              id: user.uid,
-              username: name,
-              photoUrl: user.photoURL,
-              about: user.email.toString());
-          final ref = userRef.doc(dataUser.id);
-          ref.set(dataUser.toMap());
+          for (final providerProfile in user.providerData){
+            final dataUser = ChatUser(
+                id: user.uid,
+                username: name,
+                photoUrl: providerProfile.photoURL,
+                about: user.email.toString());
+            final ref = userRef.doc(dataUser.id);
+            ref.set(dataUser.toMap());
+          }
         }
       }).whenComplete(() {
         emit(AuthSuccess());
