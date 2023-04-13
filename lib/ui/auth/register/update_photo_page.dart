@@ -102,7 +102,7 @@ class _UpdatePhotoPageState extends State<UpdatePhotoPage> {
                             context
                                 .read<AuthCubit>()
                                 .uploadPhoto(imageFile!, dataUser.uid);
-                            Navigator.pushNamed(context, LoginPage.routeName);
+                            Navigator.pushReplacementNamed(context, LoginPage.routeName);
                           }else{
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select an image')));
                           }

@@ -21,10 +21,18 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  late TextEditingController nameController;
   bool isLoading = false;
+
+  @override
+  void initState() {
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    nameController = TextEditingController();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -89,12 +97,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               password.isNotEmpty) {
                             context.read<AuthCubit>().signUpWithEmail(name, email, password, null);
                             if (state is AuthSuccess){
-                              Navigator.pushNamed(
+                              Navigator.pushReplacementNamed(
                                   context, UpdatePhotoPage.routeName,);
                             }
                             if (state is AuthLoading){
                               setState(() {
-                                isLoading != isLoading;
+                                isLoading = !isLoading;
                               });
                             }
                             if (state is AuthFailed){
