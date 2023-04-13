@@ -5,6 +5,7 @@ import 'package:chatapp/data/service/user_service.dart';
 import 'package:chatapp/ui/auth/register/register_page.dart';
 import 'package:chatapp/ui/auth/welcome_page.dart';
 import 'package:chatapp/ui/home/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +20,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final timer = 5;
-  final currentUser = UserService().auth.currentUser;
+  User? currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -65,8 +66,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return Timer(duration, () {
       if (currentUser != null){
         Navigator.pushReplacementNamed(context, HomePage.routeName);
+      }else{
+        Navigator.pushReplacementNamed(context, WelcomePage.routeName);
       }
-      Navigator.pushReplacementNamed(context, WelcomePage.routeName);
     });
   }
 }
