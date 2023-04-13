@@ -5,6 +5,7 @@ import 'package:chatapp/ui/home/home_page.dart';
 import 'package:chatapp/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 
 import '../../../widget/custom_button.dart';
 
@@ -18,6 +19,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var logger = Logger();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLoading = false;
@@ -31,8 +33,24 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(
-      child: BlocBuilder<AuthCubit, AuthState>(
+    return Scaffold(
+        body: SafeArea(
+      child: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            logger.i('Login success');
+            Navigator.pushReplacementNamed(context, HomePage.routeName);
+          }
+          if (state is AuthLoading) {
+            logger.i('loading...');
+            isLoading = !isLoading;
+          }
+          if (state is AuthFailed) {
+            logger.e(state.error);
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Something went wrong')));
+          }
+        },
         builder: (context, state) {
           return SingleChildScrollView(
             child: Padding(
@@ -63,8 +81,9 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 40,
                   ),
-                  Stack(children: [
-                    CustomButton(
+                  Stack(
+                    children: [
+                      CustomButton(
                         textButton: "Masuk",
                         onTap: () {
                           final email = _emailController.text;
@@ -73,34 +92,23 @@ class _LoginPageState extends State<LoginPage> {
                             context
                                 .read<AuthCubit>()
                                 .loginWithEmail(email, password);
-                            if (state is AuthSuccess) {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  HomePage.routeName, (route) => route.isFirst);
-                            }
-                            if (state is AuthLoading) {
-                              setState(() {
-                                isLoading = !isLoading;
-                              });
-                            }
-                            if (state is AuthFailed) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(state.error)));
-                            }
                           }
-                        }),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Visibility(
-                        visible: isLoading,
-                        child: Container(
-                          height: 24,
-                          width: 24,
-                          margin: const EdgeInsets.all(15),
-                          child: const CircularProgressIndicator(),
+                        },
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Visibility(
+                          visible: isLoading,
+                          child: Container(
+                            height: 24,
+                            width: 24,
+                            margin: const EdgeInsets.all(15),
+                            child: const CircularProgressIndicator(),
+                          ),
                         ),
                       ),
-                    )
-                  ]),
+                    ],
+                  ),
                   const SizedBox(
                     height: 40,
                   ),
