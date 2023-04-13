@@ -1,5 +1,6 @@
 import 'package:chatapp/common/slide_page_route.dart';
 import 'package:chatapp/common/theme_data_manager.dart';
+import 'package:chatapp/data/cubit/auth_cubit.dart';
 import 'package:chatapp/data/cubit/message_cubit.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
 import 'package:chatapp/firebase_options.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
           create: (context) => UserCubit()..fetchUsers(),
         ),
         BlocProvider(create: (context) => MessageCubit()),
+        BlocProvider(create: (context) => AuthCubit()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
