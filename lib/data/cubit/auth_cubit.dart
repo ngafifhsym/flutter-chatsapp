@@ -13,21 +13,25 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
+  final userRef = UserService().userReference;
+  final userAuth = UserService().auth;
+  final userStorage = UserService().userStorage;
+
   void uploadPhoto(File img, String uid) async {
     emit(AuthLoading());
     try {
       final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference ref = UserService().userStorage.child(uid).child(fileName);
+      Reference ref = userStorage.child(uid).child(fileName);
 
       final UploadTask uploadTask = ref.putFile(img);
       final TaskSnapshot downloadUrl = (await uploadTask);
       final String url = await downloadUrl.ref.getDownloadURL();
 
-      final User? user = UserService().auth.currentUser;
+      final User? user = userAuth.currentUser;
       if (user != null) {
         await user.updatePhotoURL(url);
         // ** update user data here
-        final ref = UserService().userReference.doc(uid);
+        final ref = userRef.doc(uid);
         ref.update({'photoUrl': url});
       }
       emit(AuthSuccess());
@@ -39,36 +43,39 @@ class AuthCubit extends Cubit<AuthState> {
   void loginWithEmail(String email, String password) async {
     emit(AuthLoading());
     try {
-      await UserService()
-          .auth
-          .signInWithEmailAndPassword(email: email, password: password);
+      await userAuth.signInWithEmailAndPassword(
+          email: email, password: password);
       emit(AuthSuccess());
     } on FirebaseAuthException catch (e) {
       emit(AuthFailed(e.message!));
     }
   }
 
+  Future<void> addUserDataToFirestore(User user) async {
+    final dataUser = ChatUser(
+        id: user.uid,
+        username: user.displayName,
+        photoUrl: user.photoURL,
+        about: user.email.toString());
+    final ref = userRef.doc(dataUser.id);
+    ref.set(dataUser.toMap());
+  }
+
   void signUpWithEmail(
       String name, String email, String password, String? about) async {
     emit(AuthLoading());
     try {
-      final credential = await UserService()
-          .auth
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      final user = credential.user;
-
-      if (user != null) {
-        await user.updateDisplayName(name);
-        final dataUser = ChatUser(
-            id: user.uid,
-            username: name,
-            photoUrl: null,
-            about: user.email.toString());
-        final ref = UserService().userReference.doc(dataUser.id);
-        ref.set(dataUser.toMap());
-      }
-      emit(AuthSuccess());
+      userAuth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) {
+        final user = value.user;
+        user?.updateDisplayName(name);
+        if (user != null) {
+          addUserDataToFirestore(user);
+        }
+      }).whenComplete(() {
+        emit(AuthSuccess());
+      });
     } on FirebaseAuthException catch (e) {
       emit(AuthFailed(e.toString()));
     }
@@ -76,10 +83,10 @@ class AuthCubit extends Cubit<AuthState> {
 
   void signOut() async {
     emit(AuthLoading());
-    try{
-      await UserService().auth.signOut();
+    try {
+      await userAuth.signOut();
       emit(AuthSuccess());
-    }on FirebaseAuthException catch(e){
+    } on FirebaseAuthException catch (e) {
       emit(AuthFailed(e.message.toString()));
     }
   }

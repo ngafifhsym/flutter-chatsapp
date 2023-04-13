@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/ui/auth/login/login_screen.dart';
@@ -8,6 +6,7 @@ import 'package:chatapp/widget/custom_button.dart';
 import 'package:chatapp/widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 
 import '../../../data/cubit/auth_cubit.dart';
 
@@ -21,6 +20,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  var logger = Logger();
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late TextEditingController nameController;
@@ -50,7 +50,30 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
           child: SingleChildScrollView(
-            child: BlocBuilder<AuthCubit, AuthState>(
+            child: BlocConsumer<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is AuthSuccess) {
+                  logger.d('Register Success');
+                  Navigator.pushReplacementNamed(
+                    context,
+                    UpdatePhotoPage.routeName,
+                  );
+                }
+                if (state is AuthFailed) {
+                  logger.e(state.error);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      'Something went wrong!',
+                      style: getWhite14RegularTextStyle(),
+                    ),
+                    backgroundColor: ColorManager.secondaryColor,
+                  ));
+                }
+                if (state is AuthLoading) {
+                  logger.i('loading...');
+                  isLoading = !isLoading;
+                }
+              },
               builder: (context, state) {
                 return Column(
                   children: [
@@ -85,50 +108,46 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(
                       height: 50,
                     ),
-                    Visibility(visible: isLoading, child: CircularProgressIndicator()),
-                    CustomButton(
-                        textButton: "Daftar",
-                        onTap: () {
-                          final name = nameController.text;
-                          final email = emailController.text;
-                          final password = passwordController.text;
-                          if (name.isNotEmpty &&
-                              email.isNotEmpty &&
-                              password.isNotEmpty) {
-                            context.read<AuthCubit>().signUpWithEmail(name, email, password, null);
-                            if (state is AuthSuccess){
-                              Navigator.pushReplacementNamed(
-                                  context, UpdatePhotoPage.routeName,);
-                            }
-                            if (state is AuthLoading){
-                              setState(() {
-                                isLoading = !isLoading;
-                              });
-                            }
-                            if (state is AuthFailed){
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    Stack(
+                      children: [
+                        CustomButton(
+                          textButton: "Daftar",
+                          onTap: () {
+                            final name = nameController.text;
+                            final email = emailController.text;
+                            final password = passwordController.text;
+                            if (name.isNotEmpty &&
+                                email.isNotEmpty &&
+                                password.isNotEmpty) {
+                              context
+                                  .read<AuthCubit>()
+                                  .signUpWithEmail(name, email, password, null);
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
                                 content: Text(
-                                  state.error,
+                                  'Field tidak boleh kosong',
                                   style: getWhite14RegularTextStyle(),
                                 ),
                                 backgroundColor: ColorManager.secondaryColor,
                               ));
                             }
-
-                          } else {
-                            /** jangan lupa menambahakan validasi otomatis menggunakan...
-                             * ...text editing controller listener
-                             */
-
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                'Field tidak boleh kosong',
-                                style: getWhite14RegularTextStyle(),
-                              ),
-                              backgroundColor: ColorManager.secondaryColor,
-                            ));
-                          }
-                        }),
+                          },
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Visibility(
+                            visible: isLoading,
+                            child: Container(
+                              height: 24,
+                              width: 24,
+                              margin: const EdgeInsets.all(15),
+                              child: const CircularProgressIndicator(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       height: 16,
                     ),
@@ -139,7 +158,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           'Sudah punya akun?',
                           style: getWhite12RegularTextStyle(),
                         ),
-                        const SizedBox(width: 5,),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, LoginPage.routeName);
