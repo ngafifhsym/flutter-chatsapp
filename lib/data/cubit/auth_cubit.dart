@@ -1,13 +1,10 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:chatapp/data/model/chat_user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import '../service/user_service.dart';
-
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -51,16 +48,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> addUserDataToFirestore(User user) async {
-    final dataUser = ChatUser(
-        id: user.uid,
-        username: user.displayName,
-        photoUrl: user.photoURL,
-        about: user.email.toString());
-    final ref = userRef.doc(dataUser.id);
-    ref.set(dataUser.toMap());
-  }
-
   void signUpWithEmail(
       String name, String email, String password, String? about) async {
     emit(AuthLoading());
@@ -71,7 +58,13 @@ class AuthCubit extends Cubit<AuthState> {
         final user = value.user;
         user?.updateDisplayName(name);
         if (user != null) {
-          addUserDataToFirestore(user);
+          final dataUser = ChatUser(
+              id: user.uid,
+              username: name,
+              photoUrl: user.photoURL,
+              about: user.email.toString());
+          final ref = userRef.doc(dataUser.id);
+          ref.set(dataUser.toMap());
         }
       }).whenComplete(() {
         emit(AuthSuccess());
