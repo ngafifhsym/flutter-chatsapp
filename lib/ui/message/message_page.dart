@@ -272,25 +272,28 @@ class _MessagePageState extends State<MessagePage> {
       context: context,
       builder: (context) {
         return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo),
-                title: const Text('Gallery'),
-                onTap: () {
-                  selectImage(ImageSource.gallery);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt_outlined),
-                title: const Text('Camera'),
-                onTap: () {
-                  selectImage(ImageSource.camera);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+          child: Container(
+            color: ColorManager.secondaryColor,
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo),
+                  title: const Text('Gallery'),
+                  onTap: () {
+                    selectImage(ImageSource.gallery);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt_outlined),
+                  title: const Text('Camera'),
+                  onTap: () {
+                    selectImage(ImageSource.camera);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

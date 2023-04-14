@@ -1,6 +1,7 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/style_manager.dart';
 import 'package:chatapp/data/model/chat_user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -15,6 +16,14 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _textController = TextEditingController();
+  late User? currentUser;
+  late bool isCurrentUser;
+
+  @override
+  void initState() {
+    currentUser = FirebaseAuth.instance.currentUser;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -25,6 +34,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final user = ModalRoute.of(context)!.settings.arguments as ChatUser;
+    if (currentUser != null){
+      isCurrentUser = currentUser!.uid == user.id;
+    }
 
     Widget dataItem(
         String title, String subTitle, IconData leading, Function() onPressed) {
@@ -44,12 +56,15 @@ class _ProfilePageState extends State<ProfilePage> {
             overflow: TextOverflow.ellipsis,
             style: getWhite16SemiBoldTextStyle(),
           ),
-          trailing: IconButton(
-              onPressed: onPressed,
-              icon: FaIcon(
-                FontAwesomeIcons.penToSquare,
-                color: ColorManager.brown,
-              )),
+          trailing: isCurrentUser
+              ? IconButton(
+                  onPressed: onPressed,
+                  icon: FaIcon(
+                    FontAwesomeIcons.penToSquare,
+                    color: ColorManager.brown,
+                  ),
+                )
+              : const SizedBox(),
         ),
       );
     }
@@ -88,7 +103,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ElevatedButton(
                 onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: ColorManager.brown),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorManager.brown),
                 child: Text(
                   'Simpan',
                   style: getWhite14RegularTextStyle(),
@@ -109,26 +125,38 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Hero(
-                  tag: user.photoUrl.toString(),
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(user.photoUrl.toString()))),
-                  ),
-                ),
-                dataItem('Username', user.username.toString(), FontAwesomeIcons.userTie,
-                    () {
+                user.photoUrl != null
+                    ? Hero(
+                        tag: user.photoUrl.toString(),
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          margin: const EdgeInsets.symmetric(vertical: 20),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image:
+                                      NetworkImage(user.photoUrl.toString()))),
+                        ),
+                      )
+                    : Container(
+                        width: 150,
+                        height: 150,
+                        margin: const EdgeInsets.symmetric(vertical: 20),
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/empty_image.png'))),
+                      ),
+                dataItem('Username', user.username.toString(),
+                    FontAwesomeIcons.userTie, () {
                   editUsername('Edit Username');
                 }),
-                dataItem(
-                    'Email', user.about.toString(), FontAwesomeIcons.envelope, () => null),
-                dataItem('About', user.about.toString(), FontAwesomeIcons.circleInfo,
-                    () => null),
+                dataItem('Email', user.about.toString(),
+                    FontAwesomeIcons.envelope, () => null),
+                dataItem('About', user.about.toString(),
+                    FontAwesomeIcons.circleInfo, () => null),
               ],
             ),
           ),
