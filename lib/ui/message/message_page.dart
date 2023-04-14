@@ -10,7 +10,6 @@ import 'package:chatapp/ui/profile/profile_page.dart';
 import 'package:chatapp/widget/circle_image_widget.dart';
 import 'package:chatapp/widget/current_message_item.dart';
 import 'package:chatapp/widget/guest_message_item.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,7 +50,7 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   void setLocal(ChatUser dataUser) {
-    if (currentUser != null){
+    if (currentUser != null) {
       final uid = currentUser!.uid;
       if (uid.compareTo(dataUser.id) > 0) {
         groupChatId = '$uid-${dataUser.id}';
@@ -59,7 +58,6 @@ class _MessagePageState extends State<MessagePage> {
       } else {
         groupChatId = '${dataUser.id}-$uid';
       }
-
     }
   }
 
@@ -80,8 +78,12 @@ class _MessagePageState extends State<MessagePage> {
           ),
         ),
         title: GestureDetector(
-          onTap: (){
-            Navigator.pushNamed(context, ProfilePage.routeName, arguments: dataUser,);
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              ProfilePage.routeName,
+              arguments: dataUser,
+            );
           },
           child: ListTile(
             leading: Hero(
@@ -106,8 +108,7 @@ class _MessagePageState extends State<MessagePage> {
         controller: _scrollController,
         itemBuilder: (context, index) {
           final message = messages[index];
-          bool isCurrent =
-              message.senderId == currentUser?.uid ? true : false;
+          bool isCurrent = message.senderId == currentUser?.uid ? true : false;
           if (isCurrent) {
             return CurrentMessageItem(message: message);
           } else {
@@ -133,11 +134,12 @@ class _MessagePageState extends State<MessagePage> {
                     width: double.infinity,
                     color: ColorManager.secondaryColor,
                     margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
                     constraints:
                         const BoxConstraints(minHeight: 0, maxHeight: 250),
                     child: GestureDetector(
-                      onLongPress: (){
+                      onLongPress: () {
                         setState(() {
                           imageFile = null;
                         });
@@ -170,25 +172,30 @@ class _MessagePageState extends State<MessagePage> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            selectImage(ImageSource.gallery);
+                            _showBottomSheet(context);
                           },
                         )),
                   ),
                 ),
                 IconButton(
                   onPressed: () {
-                    if (_textEditingController.text.isNotEmpty || imageFile != null ) {
-                      if (currentUser != null){
+                    if (_textEditingController.text.isNotEmpty ||
+                        imageFile != null) {
+                      if (currentUser != null) {
                         final String date =
-                        DateTime.now().millisecondsSinceEpoch.toString();
+                            DateTime.now().millisecondsSinceEpoch.toString();
                         final chatId = groupChatId;
                         final senderId = currentUser!.uid;
                         final receiverId = dataUser.id;
-                        final message = _textEditingController.text.isEmpty ? null : _textEditingController.text;
-                        context.read<MessageCubit>().addMessage(
-                            chatId, senderId, receiverId, date, message, imageFile);
+                        final message = _textEditingController.text.isEmpty
+                            ? null
+                            : _textEditingController.text;
+                        context.read<MessageCubit>().addMessage(chatId,
+                            senderId, receiverId, date, message, imageFile);
                       }
-                      imageFile = null;
+                      setState(() {
+                        imageFile = null;
+                      });
                       _textEditingController.clear();
                       _focusNode.unfocus();
                     }
@@ -247,22 +254,46 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   void selectImage(ImageSource source) async {
-    final image = await ImagePicker()
-        .pickImage(source: source, maxHeight: 1800, maxWidth: 1800);
+    XFile? image;
+    if (source == ImageSource.gallery) {
+      image = await ImagePicker().pickImage(
+          source: ImageSource.gallery, maxHeight: 1800, maxWidth: 1800);
+    } else {
+      image = await ImagePicker().pickImage(
+          source: ImageSource.camera, maxHeight: 1800, maxWidth: 1800);
+    }
     setState(() {
       imageFile = image != null ? File(image.path) : null;
     });
   }
 
-  // Future<XFile?> selectVideo(ImageSource source) async {
-  //   final video = await ImagePicker().pickVideo(source: source);
-  //   return video;
-  // }
-  //
-  // Future<List<XFile>?> selectFile() async {
-  //   List<XFile>? file;
-  //   final result = await FilePicker.platform.pickFiles(allowMultiple: true);
-  //   file = result?.paths.map((e) => XFile(e!)).toList();
-  //   return file;
-  // }
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo),
+                title: const Text('Gallery'),
+                onTap: () {
+                  selectImage(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt_outlined),
+                title: const Text('Camera'),
+                onTap: () {
+                  selectImage(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
