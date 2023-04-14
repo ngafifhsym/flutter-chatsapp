@@ -277,16 +277,16 @@ class _MessagePageState extends State<MessagePage> {
             child: Wrap(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.photo),
-                  title: const Text('Gallery'),
+                  leading: const Icon(Icons.photo, color: Colors.white,),
+                  title: Text('Gallery', style: getWhite14RegularTextStyle(),),
                   onTap: () {
                     selectImage(ImageSource.gallery);
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.camera_alt_outlined),
-                  title: const Text('Camera'),
+                  leading: const Icon(Icons.camera_alt_outlined, color: Colors.white,),
+                  title: Text('Camera', style: getWhite14RegularTextStyle(),),
                   onTap: () {
                     selectImage(ImageSource.camera);
                     Navigator.pop(context);

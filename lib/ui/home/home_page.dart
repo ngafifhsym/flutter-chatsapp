@@ -1,7 +1,6 @@
 import 'package:chatapp/common/color_manager.dart';
 import 'package:chatapp/common/slide_page_route.dart';
 import 'package:chatapp/common/style_manager.dart';
-import 'package:chatapp/data/cubit/auth_cubit.dart';
 import 'package:chatapp/data/cubit/user_cubit.dart';
 import 'package:chatapp/ui/auth/login/login_screen.dart';
 import 'package:chatapp/ui/message/message_page.dart';
@@ -48,7 +47,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text('WalChat'),
         actions: [
           IconButton(
-              onPressed: showPopUpMenu,
+              onPressed: () => showPopUpMenu(context),
               icon: const FaIcon(
                 FontAwesomeIcons.ellipsisVertical,
               ))
@@ -108,36 +107,46 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  void showPopUpMenu() => showMenu(
-          context: context,
-          color: ColorManager.secondaryColor,
-          position: const RelativeRect.fromLTRB(1000, 0, 30, 1000),
-          items: [
-            PopupMenuItem(
-              child: TextButton(
-                onPressed: () {
-                  if (currentUser != null){
-                    final ChatUser userData = ChatUser(id: currentUser!.uid, username: currentUser?.displayName, photoUrl: currentUser?.photoURL, about: currentUser?.email);
-                    Navigator.pushNamed(context, ProfilePage.routeName, arguments: userData);
-                  }
-                },
-                child: Text(
-                  'Profile',
-                  style: getWhite14RegularTextStyle(),
-                ),
+  void showPopUpMenu(BuildContext context) {
+    final double appbarSize =
+        AppBar().preferredSize.height + MediaQuery.of(context).padding.top;
+    showMenu(
+        context: context,
+        color: ColorManager.secondaryColor,
+        position: RelativeRect.fromLTRB(1000, appbarSize, 0, 1000),
+        items: [
+          PopupMenuItem(
+            child: TextButton(
+              onPressed: () {
+                if (currentUser != null) {
+                  final ChatUser userData = ChatUser(
+                      id: currentUser!.uid,
+                      username: currentUser?.displayName,
+                      photoUrl: currentUser?.photoURL,
+                      about: currentUser?.email);
+                  Navigator.pushNamed(context, ProfilePage.routeName,
+                      arguments: userData);
+                }
+              },
+              child: Text(
+                'Profile',
+                style: getWhite14RegularTextStyle(),
               ),
             ),
-            PopupMenuItem(
-              child: TextButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route)=> false);
-                },
-                child: Text(
-                  'LogOut',
-                  style: getWhite14RegularTextStyle(),
-                ),
+          ),
+          PopupMenuItem(
+            child: TextButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, LoginPage.routeName, (route) => false);
+              },
+              child: Text(
+                'LogOut',
+                style: getWhite14RegularTextStyle(),
               ),
             ),
-          ]);
+          ),
+        ]);
+  }
 }
