@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
   void showPopUpMenu() => showMenu(
           context: context,
           color: ColorManager.secondaryColor,
-          position: const RelativeRect.fromLTRB(1000, 120, 0, 1000),
+          position: const RelativeRect.fromLTRB(1000, 0, 30, 1000),
           items: [
             PopupMenuItem(
               child: TextButton(
